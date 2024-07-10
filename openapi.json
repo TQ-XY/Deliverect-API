@@ -7,35 +7,17 @@
   },
   "servers": [
     {
-      "url": "https://api.staging.deliverect.com"
-    },
-    {
-      "url": "https://integrator.com"
-    },
-    {
-      "url": "http://{{webhookurl}}orders"
-    },
-    {
-      "url": "http://{{webhookurl}}products"
-    },
-    {
-      "url": "http://{{yoursetwebhookurl}}"
-    },
-    {
-      "url": "http://{{https"
-    },
-    {
-      "url": "http://{{resturl}}products"
+      "url": "https://www.api.staging.deliverect.com"
     }
   ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
-        "type": "http",
+        "type": "https",
         "scheme": "bearer"
       },
       "oauth2Auth": {
-        "type": "http",
+        "type": "https",
         "scheme": "oauth2"
       }
     }
