@@ -307,7 +307,7 @@
           "POS API"
         ],
         "summary": "Insert/update products and categories",
-        "description": "Insert/update Products The 'Source of Truth' in terms of product data and structure is almost always sourced from an integrated POS system. When a POS successfully syncs products with their unique identifiers (PLUs), these will be selected by the customer for inclusion in their menu(s). In turn, orders will be created with these same PLUs and injected into the POS via an ['Order Webhook'](https://developers.deliverect.com/reference/post-orders-webhook) This process does not necessarily need a complete transfer of products stored in the POS, but can involve only a subset of products i.e. 'Online Only products' which a customer can possibly flag as being suitable for selling online. ## Product Model For a full list of all product attributes, see the link below; https://developers.deliverect.com/page/glossary-product-insert Account and Location ID As you can see from the examples the Deliverect accountId and locationId are both set in the body content. These IDs are required and should be obtained via the Register POS webhook.Deleting products There is currently no way to directly delete a product. To achieve the desired effect, a list of products can be pushed again, in which products to be deleted are omitted. ## Duplicate products Where a duplicate PLU exists, the product sync will proceed, but only one of the duplicated items will be created. ## Product sync (GET Products) We require that all POS partners call this endpoint with POS products in response to a GET Request from Deliverect. See the section on Sync Products https://developers.deliverect.com/reference/get-products.Every call to this endpoint will either; **create**, **update** or **delete** products, based on the products that already exist in the specified location. > 📘 Menus vs Products > > We do expect products to be sourced from a POS, but don't have a facility to push structured menus built within a POS into Deliverect. > > This process of 'Menu Building' is fully handled in Deliverect (see guide on this [here](https://developers.deliverect.com/docs/create-a-menu)) > 📘 GTIN((Global Trade Item Number) > > The GTIN / EAN codes can be sent within the products objects but we are not validating them on our end yet! ## Product Configurations For more detailed guidelines on how to structure products and set e.g. price, tax, combos etc see the page below; https://developers.deliverect.com/page/product-configuration",
+        "description": "Insert/update Products The 'Source of Truth' in terms of product data and structure is almost always sourced from an integrated POS system. When a POS successfully syncs products with their unique identifiers (PLUs), these will be selected by the customer for inclusion in their menu(s). In turn, orders will be created with these same PLUs and injected into the POS ",
         "requestBody": {
           "content": {
             "*/*": {
@@ -914,7 +914,7 @@
           "default": {
             "description": "default",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 },
@@ -1087,7 +1087,7 @@
           "POS API"
         ],
         "summary": "Account Brands",
-        "description": "This endpoint provides the existing brands of an account. Brands represent the grouping of a particular offering from a customer, typically a menu concept or otherwise unique aspect. These brands are then individually present on ordering platforms. They could be a range of ghost kitchens, for example. A Deliverect account can have brands configured per <>. The brand is identifiable in orders as a unique ID. > 📘 Brand subscriptions",
+        "description": "This endpoint provides the existing brands of an account. Brands represent the grouping of a particular offering from a customer, typically a menu concept or otherwise unique aspect. These brands are then individually present on ordering platforms. They could be a range of ghost kitchens, for example",
         "parameters": [
           {
             "name": "accountId",
@@ -1102,7 +1102,7 @@
           "default": {
             "description": "default",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 },
@@ -1388,7 +1388,7 @@
           "POS API"
         ],
         "summary": "Get linked accounts",
-        "description": "Every restaurant has an account. When such an account is linked to your integrator account, it will show up when doing this call. Please note, that here and later all dates and times, coming from/to Deliverect are UTC. #### Account types: | Account type | Integer representation | | - | - | | Partner | 1 | | Chain | 2 | | Customer | 3 | #### List of currencies: | Currency | Integer representation | | - | - | | Euro | 1 | | British Pound Sterling | 2 | | United States Dollar | 3 | | Canadian Dollar | 4 | | New Zealand Dollar | 5 | | Australian Dollar | 6 | | Bahraini Dinar | 7 | | United Arab Emirates Dirham | 8 | | Swedish Krona | 9 | | Swiss Franc | 10 | | Romanian Leu | 11 | | Moroccan Dirham | 12 | | Polish Zloty | 13 | | Norwegian Krone | 14 | | Mexican Peso | 15 | | Danish Krone | 16 | | Kuwaiti Dinar | 17 | | Saudi Riyal | 18 | | Afghan Afghani | 19 | | Albanian Lek | 20 | | Armenian Dram | 21 | | Netherlands Antillean Guilder | 22 | | Angolan Kwanza | 23 | | Argentine Peso | 24 | | Aruban Florin | 25 | | Azerbaijani Manat | 26 | | Bosnia-Herzegovina Convertible Mark | 27 | | Barbadian Dollar | 28 | | Bangladeshi Taka | 29 | | Bulgarian Lev | 30 | | Burundian Franc | 31 | | Bermudan Dollar | 32 | | Brunei Dollar | 33 | | Bolivian Boliviano | 34 | | Brazilian Real | 35 | | Bahamian Dollar | 36 | | Bitcoin | 37 | | Bhutanese Ngultrum | 38 | | Botswanan Pula | 39 | | Belarusian Ruble | 40 | | Belize Dollar | 41 | | Congolese Franc | 42 | | Chilean Unit of Account (UF) | 43 | | Chilean Peso | 44 | | Chinese Yuan (Offshore) | 45 | | Chinese Yuan | 46 | | Colombian Peso | 47 | | Costa Rican Colón | 48 | | Cuban Convertible Peso | 49 | | Cuban Peso | 50 | | Cape Verdean Escudo | 51 | | Czech Republic Koruna | 52 | | Djiboutian Franc | 53 | | Dominican Peso | 54 | | Algerian Dinar | 55 | | Egyptian Pound | 56 | | Eritrean Nakfa | 57 | | Ethiopian Birr | 58 | | Fijian Dollar | 59 | | Falkland Islands Pound | 60 | | Georgian Lari | 61 | | Guernsey Pound | 62 | | Ghanaian Cedi | 63 | | Gibraltar Pound | 64 | | Gambian Dalasi | 65 | | Guinean Franc | 66 | | Guatemalan Quetzal | 67 | | Guyanaese Dollar | 68 | | Hong Kong Dollar | 69 | | Honduran Lempira | 70 | | Croatian Kuna | 71 | | Haitian Gourde | 72 | | Hungarian Forint | 73 | | Indonesian Rupiah | 74 | | Israeli New Sheqel | 75 | | Manx pound | 76 | | Indian Rupee | 77 | | Iraqi Dinar | 78 | | Iranian Rial | 79 | | Icelandic Króna | 80 | | Jersey Pound | 81 | | Jamaican Dollar | 82 | | Jordanian Dinar | 83 | | Japanese Yen | 84 | | Kenyan Shilling | 85 | | Kyrgystani Som | 86 | | Cambodian Riel | 87 | | Comorian Franc | 88 | | North Korean Won | 89 | | South Korean Won | 90 | | Cayman Islands Dollar | 91 | | Kazakhstani Tenge | 92 | | Laotian Kip | 93 | | Lebanese Pound | 94 | | Sri Lankan Rupee | 95 | | Liberian Dollar | 96 | | Lesotho Loti | 97 | | Libyan Dinar | 98 | | Moldovan Leu | 99 | | Malagasy Ariary | 100 | | Macedonian Denar | 101 | | Myanma Kyat | 102 | | Mongolian Tugrik | 103 | | Macanese Pataca | 104 | | Mauritanian Ouguiya (pre-2018) | 105 | | Mauritanian Ouguiya | 106 | | Mauritian Rupee | 107 | | Maldivian Rufiyaa | 108 | | Malawian Kwacha | 109 | | Malaysian Ringgit | 110 | | Mozambican Metical | 111 | | Namibian Dollar | 112 | | Nigerian Naira | 113 | | Nicaraguan Córdoba | 114 | | Nepalese Rupee | 115 | | Omani Rial | 116 | | Panamanian Balboa | 117 | | Peruvian Nuevo Sol | 118 | | Papua New Guinean Kina | 119 | | Philippine Peso | 120 | | Pakistani Rupee | 121 | | Paraguayan Guarani | 122 | | Qatari Rial | 123 | | Serbian Dinar | 124 | | Russian Ruble | 125 | | Rwandan Franc | 126 | | Solomon Islands Dollar | 127 | | Seychellois Rupee | 128 | | Sudanese Pound | 129 | | Singapore Dollar | 130 | | Saint Helena Pound | 131 | | Sierra Leonean Leone | 132 | | Somali Shilling | 133 | | Surinamese Dollar | 134 | | South Sudanese Pound | 135 | | São Tomé and Príncipe Dobra (pre-2018) | 136 | | São Tomé and Príncipe Dobra | 137 | | Salvadoran Colón | 138 | | Syrian Pound | 139 | | Swazi Lilangeni | 140 | | Thai Baht | 141 | | Tajikistani Somoni | 142 | | Turkmenistani Manat | 143 | | Tunisian Dinar | 144 | | Tongan Pa'anga | 145 | | Turkish Lira | 146 | | Trinidad and Tobago Dollar | 147 | | New Taiwan Dollar | 148 | | Tanzanian Shilling | 149 | | Ukrainian Hryvnia | 150 | | Ugandan Shilling | 151 | | Uruguayan Peso | 152 | | Uzbekistan Som | 153 | | Venezuelan Bolívar Fuerte | 154 | | Vietnamese Dong | 155 | | Vanuatu Vatu | 156 | | Samoan Tala | 157 | | CFA Franc BEAC | 158 | | East Caribbean Dollar | 159 | | CFA Franc BCEAO | 160 | | CFP Franc | 161 | | Yemeni Rial | 162 | | South African Rand | 163 | | Zambian Kwacha | 164 | | Zimbabwean Dollar | 165 |",
+        "description": "Every restaurant has an account. When such an account is linked to your integrator account, it will show up when doing this call.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2194,6 +2194,7 @@
       }
     },
     "/products": {
+      "get": {
       "tags": [
         "POS API"
       ],
@@ -2212,6 +2213,7 @@
           }
         }
       }
+     }
     },
     "/getTables/": {
       "get": {
@@ -2314,8 +2316,8 @@
         "tags": [
           "Channel API"
         ],
-        "summary": "Cancel Order",
-        "description": "Your generic channel integration can use this endpoint to place a new order for a linked location. Note that, when sending a new order, Deliverect will check whether the party sending the order has the correct **scope** to do so. If not, they are considered unauthorized. The scope for generic channels is communicated to integrating parties together with the API Keys, and is checked in the request target URL only. Therefore, make sure to replace the ChannelName with the scope. For `orderType`, send one of these values (as an integer): | Type | Integer value | |-|-| | pickup | 1 | | delivery | 2 | | eat in | 3 | | curbside | 4 | For payment type, send one of these values: | Payment type | Integer value | |-|-| | credit card online | 0 | | cash | 1 | --- #### Tax exclusive orders If a store on your channel works tax exclusively, your channel API should send orders from that store in a slightly different way. First of all, always make sure that the channel link for this store has the Is Tax Exclusive? setting (under Advanced Settings) enabled in Deliverect. This setting determines whether Deliverect will parse orders as tax exclusive or not. As for the order itself, this is what must be taken into account: - Prices of products that are sent must **exclude** taxes - `deliveryCost` and `serviceCharge` must also **exclude** taxes, total taxes for those should be sent with keys `deliveryCostTax` and `serviceChargeTax`, respectively - The total payment amount must **include** taxes - An extra array `taxes` must be sent, which details all tax amounts (excluding `deliveryCostTax` and `serviceChargeTax`) per tax class The table below outlines the structure for the dicts in `taxes`, which each describe a tax class. | Key | Value | |-|-| | `taxClassId` | the ID corresponding to this tax class as used by Deliverect | | `name` | the display name for this category of taxes, which is how it should be printed on a receipt | | `total` | the sum of all tax amounts for this category | --- #### A note on `taxClassId`s We have yet to formalize tax class IDs. In the future, expect menu push requests to include which tax classes (by ID) should be applied to which product(s). For now, we will not use the provided value sent by your channel API. --- Make sure to send all tax amounts as integers, bearing in mind the number of `decimalDigits`. In the end, the equation below must always hold true: ```text <payment total> = <sum of prices of all products in the order> + deliveryCost + serviceCharge + deliveryCostTax + serviceChargeTax + <sum of all tax amounts in the taxes array> ``` Make sure to check out the example request for a tax exclusive order on the right. --- #### About estimated pickup time If you look at the example requests on the right, you'll notice the `estimatedPickupTime` field. Make sure to fill this in with a valid timestamp in the format used in the example request. If your channel doesn't use an estimate for the pickup time, the easiest thing to do is to reuse `pickupTime`, and just send the same value for `estimatedPickupTime`. --- #### Canceling an order **Note:** Your channel is not yet required to support order cancellation in order to become or remain certified. If your channel supports canceling an order, you can send a request to Deliverect that will have the order canceled. Note that your channel API, if it supports canceling an order, should only attempt to do so for orders that have not yet been accepted. Once an order has been accepted by the POS, it can no longer be canceled. To cancel an order, send it to the order endpoint again (like you would for a new order), and make sure to add a top-level entry with key `cancellationReason`, which has a string value to indicate the reason your channel is sending a cancellation request for this order. Note that you do not have to include all data that was in the original order, but only the information needed to identify the order. This will give the order the `CANCEL` status. Once the order is sent to the POS with that status, the POS can confirm the cancellation, after which the order will have the `CANCELED` status, and can effectively be considered canceled. To see what a `CANCEL` order looks like, select the corresponding example from the drop-down box on the right. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
+        "summary": "Create Order",
+        "description": "Your generic channel integration can use this endpoint to place a new order for a linked location. Note that, when sending a new order, Deliverect will check whether the party sending the order has the correct **scope** to do so. If not, they are considered unauthorized. The scope for generic channels is communicated to integrating parties together with the API Keys, and is checked in the request target URL only.",
         "requestBody": {
           "content": {
             "*/*": {
@@ -2439,6 +2441,77 @@
           }
         }
       }
+    },
+    "/{channelName}/order/{channelLinkId}/":{
+      "post": {
+    "tags": [
+      "Channel API"
+    ],
+    "summary": "Cancel Order",
+    "description": "Your channel integration can process a cancellation using the same endpoint used create a new order.",
+    "requestBody": {
+      "content": {
+        "*/*": {
+          "schema": {
+            "type": "string",
+            "examples": [
+              {
+                "channelOrderId": "channelOrderId",
+                "channelOrderDisplayId": "channelDisplayOrderId",
+                "channelLinkId": "5e****abc11dec0001****9b",
+                "status": 100,
+                "cancellationReason": "Customer requests order cancellation"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "Content-Type",
+        "in": "header",
+        "schema": {
+          "type": "string"
+        },
+        "example": "application/json"
+      },
+      {
+        "name": "channelName",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "required": true
+      },
+      {
+        "name": "channelLinkId",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "required": true
+      }
+    ],
+    "responses": {
+      "default": {
+        "description": "default",
+        "content": {
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            },
+            "example": null
+          }
+        }
+      }
+    }
+  }
     },
     "/{channelName}/menuStatus/{_id}": {
       "post": {
@@ -2817,6 +2890,455 @@
         }
       }
     },
+    "/allAllegens":{
+      "get": {
+    "tags": [
+      "Channel API"
+    ],
+    "summary": "GET Allergens and Tags",
+    "description": "This allows a channel to retrieve allergens and tags that exist in Deliverect.",
+    "responses": {
+      "200": {
+        "description": "OK",
+        "headers": {
+          "Access-Control-Allow-Credentials": {
+            "schema": {
+              "type": "boolean",
+              "examples": [
+                "true"
+              ]
+            }
+          },
+          "Access-Control-Allow-Headers": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Authorization,Cache-Control,Content-Type,If-Match,Keep-Alive,User-Agent"
+              ]
+            }
+          },
+          "Access-Control-Allow-Methods": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT"
+              ]
+            }
+          },
+          "Access-Control-Allow-Origin": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "*"
+              ]
+            }
+          },
+          "Content-Length": {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                "458"
+              ]
+            }
+          },
+          "Content-Type": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "application/json"
+              ]
+            }
+          },
+          "Date": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Tue, 24 Nov 2020 20:47:46 GMT"
+              ]
+            }
+          },
+          "Server": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Eve/1.1.1 Werkzeug/1.0.1 Python/3.8.0"
+              ]
+            }
+          },
+          "X-Protected-By": {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Sqreen"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example":[
+                {
+                  "name": "Alcohol",
+                  "allergenId": 1
+                },
+                {
+                  "name": "Halal",
+                  "allergenId": 2
+                },
+                {
+                  "name": "Kosher",
+                  "allergenId": 3
+                },
+                {
+                  "name": "Vegan",
+                  "allergenId": 4
+                },
+                {
+                  "name": "Vegetarian",
+                  "allergenId": 5
+                },
+                {
+                  "name": "Can Serve Alone",
+                  "allergenId": 6
+                },
+                {
+                  "name": "Bottle Deposit",
+                  "allergenId": 7
+                },
+                {
+                  "name": "Organic",
+                  "allergenId": 8
+                },
+                {
+                  "name": "Natural",
+                  "allergenId": 9
+                },
+                {
+                  "name": "Soft Drink",
+                  "allergenId": 10
+                },
+                {
+                  "name": "Keto",
+                  "allergenId": 11
+                },
+                {
+                  "name": "Paleo",
+                  "allergenId": 12
+                },
+                {
+                  "name": "Plant Based",
+                  "allergenId": 13
+                },
+                {
+                  "name": "Hfss",
+                  "allergenId": 14
+                },
+                {
+                  "name": "Tobacco",
+                  "allergenId": 15
+                },
+                {
+                  "name": "Baby Nursing And Feeding",
+                  "allergenId": 16
+                },
+                {
+                  "name": "Prepared Food",
+                  "allergenId": 17
+                },
+                {
+                  "name": "Prepackaged Food",
+                  "allergenId": 18
+                },
+                {
+                  "name": "Tpp Good",
+                  "allergenId": 19
+                },
+                {
+                  "name": "Milk Cocoa",
+                  "allergenId": 20
+                },
+                {
+                  "name": "Bottled Coffee Drink",
+                  "allergenId": 21
+                },
+                {
+                  "name": "Bottled Tea Drink",
+                  "allergenId": 22
+                },
+                {
+                  "name": "Prepared Drink",
+                  "allergenId": 23
+                },
+                {
+                  "name": "Energy Beverage",
+                  "allergenId": 24
+                },
+                {
+                  "name": "Noncarb Unflv Unswt Water",
+                  "allergenId": 25
+                },
+                {
+                  "name": "Noncarb Flv Swt Water",
+                  "allergenId": 26
+                },
+                {
+                  "name": "Carb Unflv Unswt Water",
+                  "allergenId": 27
+                },
+                {
+                  "name": "Carb Flv Swt Water",
+                  "allergenId": 28
+                },
+                {
+                  "name": "Juice 100Pct",
+                  "allergenId": 29
+                },
+                {
+                  "name": "Unheated Sandwich Wrap",
+                  "allergenId": 30
+                },
+                {
+                  "name": "Candy",
+                  "allergenId": 31
+                },
+                {
+                  "name": "Prepackaged Snack",
+                  "allergenId": 32
+                },
+                {
+                  "name": "Prepackaged Ice Cream",
+                  "allergenId": 33
+                },
+                {
+                  "name": "Scooped Ice Cream",
+                  "allergenId": 34
+                },
+                {
+                  "name": "Bakery Item",
+                  "allergenId": 35
+                },
+                {
+                  "name": "Cigarettes",
+                  "allergenId": 36
+                },
+                {
+                  "name": "Cigars",
+                  "allergenId": 37
+                },
+                {
+                  "name": "E Cigarette",
+                  "allergenId": 38
+                },
+                {
+                  "name": "Vapes",
+                  "allergenId": 39
+                },
+                {
+                  "name": "Smokeless Tobacco",
+                  "allergenId": 40
+                },
+                {
+                  "name": "Juice 70To99Pct",
+                  "allergenId": 41
+                },
+                {
+                  "name": "Juice 50To69Pct",
+                  "allergenId": 42
+                },
+                {
+                  "name": "Juice 25To49Pct",
+                  "allergenId": 43
+                },
+                {
+                  "name": "Juice 5To24Pct",
+                  "allergenId": 44
+                },
+                {
+                  "name": "Juice 1To4Pct",
+                  "allergenId": 45
+                },
+                {
+                  "name": "Special Offer",
+                  "allergenId": 46
+                },
+                {
+                  "name": "Celery",
+                  "allergenId": 100
+                },
+                {
+                  "name": "Gluten",
+                  "allergenId": 101
+                },
+                {
+                  "name": "Crustaceans",
+                  "allergenId": 102
+                },
+                {
+                  "name": "Fish",
+                  "allergenId": 103
+                },
+                {
+                  "name": "Eggs",
+                  "allergenId": 104
+                },
+                {
+                  "name": "Lupin",
+                  "allergenId": 105
+                },
+                {
+                  "name": "Milk",
+                  "allergenId": 106
+                },
+                {
+                  "name": "Molluscs",
+                  "allergenId": 107
+                },
+                {
+                  "name": "Mustard",
+                  "allergenId": 108
+                },
+                {
+                  "name": "Nuts",
+                  "allergenId": 109
+                },
+                {
+                  "name": "Peanuts",
+                  "allergenId": 110
+                },
+                {
+                  "name": "Sesame",
+                  "allergenId": 111
+                },
+                {
+                  "name": "Soya",
+                  "allergenId": 112
+                },
+                {
+                  "name": "Sulphites",
+                  "allergenId": 113
+                },
+                {
+                  "name": "Almonds",
+                  "allergenId": 114
+                },
+                {
+                  "name": "Barley",
+                  "allergenId": 115
+                },
+                {
+                  "name": "Brazil Nuts",
+                  "allergenId": 116
+                },
+                {
+                  "name": "Cashew",
+                  "allergenId": 117
+                },
+                {
+                  "name": "Hazelnuts",
+                  "allergenId": 118
+                },
+                {
+                  "name": "Kamut",
+                  "allergenId": 119
+                },
+                {
+                  "name": "Macadamia",
+                  "allergenId": 120
+                },
+                {
+                  "name": "Oats",
+                  "allergenId": 121
+                },
+                {
+                  "name": "Pecan",
+                  "allergenId": 122
+                },
+                {
+                  "name": "Pistachios",
+                  "allergenId": 123
+                },
+                {
+                  "name": "Rye",
+                  "allergenId": 124
+                },
+                {
+                  "name": "Spelt",
+                  "allergenId": 125
+                },
+                {
+                  "name": "Walnuts",
+                  "allergenId": 126
+                },
+                {
+                  "name": "Wheat",
+                  "allergenId": 127
+                },
+                {
+                  "name": "Sugared Drink",
+                  "allergenId": 128
+                },
+                {
+                  "name": "Dairy",
+                  "allergenId": 129
+                },
+                {
+                  "name": "Lentils",
+                  "allergenId": 130
+                },
+                {
+                  "name": "Queensland Nuts",
+                  "allergenId": 131
+                },
+                {
+                  "name": "Cannabis",
+                  "allergenId": 420
+                },
+                {
+                  "name": "Packaging Fee",
+                  "allergenId": 500
+                },
+                {
+                  "name": "No Allergens",
+                  "allergenId": 1000
+                },
+                {
+                  "name": "Gluten Free",
+                  "allergenId": 1101
+                },
+                {
+                  "name": "Sugar Free",
+                  "allergenId": 1128
+                },
+                {
+                  "name": "Lac Free",
+                  "allergenId": 1129
+                },
+                {
+                  "name": "Paracetamol",
+                  "allergenId": 2000
+                },
+                {
+                  "name": "Aspirin",
+                  "allergenId": 2001
+                },
+                {
+                  "name": "Ibuprofen",
+                  "allergenId": 2002
+                },
+                {
+                  "name": "Infant Formula",
+                  "allergenId": 2003
+                }
+            ]
+          }
+        }
+      }
+    }
+  }
+},
     "/{channelName}/updateRating": {
       "post": {
         "tags": [
@@ -2977,10 +3499,10 @@
     "/integrator.com/validateJob": {
       "post": {
         "tags": [
-          "Dispatch API "
+          "Dispatch API"
         ],
         "summary": "Validate delivery job",
-        "description": "Gets called to validate if there are drivers available and to check if it's possible to deliver one or multiple orders ##### You can find some request parameters in the table below: | Parameter | Meaning | Type | | --- | --- | --- | | `jobId` | Deliverect delivery job id | string | | `pickupTime` | Expected pick up time | string | | `pickupLocation` | Order pick up location | object | | `deliveryLocations` | Array of delivery locations | array[object] | | `deliveryLocations.orderId` | Deliverect order id | string | | `deliveryLocations.channelOrderDisplayId` | Channel order id | string | | `deliveryLocations.deliveryTime` | Expected delivery time | string | | `deliveryLocations.packageSize` | Package size | string | | `deliveryLocations.payment.orderIsAlreadyPaid` | Indicates if order has been paid already | bool | | `deliveryLocations.payment.amount` | Payment amount | integer | | `deliveryLocations.payment.paymentType` | Payment type | integer | | `deliveryLocations.payment.paysWith` | Customer pays with specified amount of money. Can be used to calculate change. | integer | ##### You can find some response parameters in the table below: | Parameter | Meaning | Type | |-|-|-| | `jobId` | Deliverect delivery job id | string | | `canDeliver` | Indicates if delivery partner able complete delivery job | bool | | `pickupTimeETA` | Estimated pick up time | string | | `price` | This is the cost charged for delivery | object | | `price.price` | Delivery cost (`1000` stands for `10.00`) | integer | | `price.taxRate` | Tax rate for delivery(`10000` stands for `10.00%`) | integer | | `courierId` | This is the unique identifier of the rider | string | | `externalJobId` | Job id in delivery partner system | integer | | `deliveryLocations.deliveryId` | Id of the delivery generated by delivery partner | string | | `deliveryLocations.orderId` | Deliverect order id | string | | `deliveryLocations.deliveryTimeETA` | Estimated delivery up time | string | ##### Transport types: Following transport types supported by deliverect: | Transport type name | String value | |-|-| | `UNKNOWN` | unknown | | `BICYCLE` | bicycle | | `CARGOBIKE` | cargobike | | `MOTORBIKE` | motorbike | | `MOTORBIKE XL` | motorbikexl | | `CAR` | car | ##### Package sizes: Following package sizes supported by deliverect: | Package size name | String value | |-|-| | `UNKNOWN` | unknown | | `SMALL` | small | | `MEDIUM` | medium | | `LARGE` | large | | `EXTRA LARGE` | extraLarge | ##### Payment info: Together with delivery location info we send payment information which include if order has been paid already, amount of payment and payment type. Following payment types are supported by Deliverect at the moment: | Payment type name | Integer value | |-|-| | credit card online | 0 | | cash | 1 | ##### Error codes: If delivery is not possible one or more of following error codes expected to be returned in response: | Deliverect error tag | Description | Integer value | |-|-|-| | `UNKNOWN` | unknown error occurred | 0 | | `INTERNAL ERROR` | internal error occurred | 5 | | `PACKAGE SIZE TOO LARGE` | package is too big to be delivered | 10 | | `INVALID PACKAGE SIZE` | provided package size is invalid | 15 | | `NO DRIVERS AVAILABLE` | no drivers available | 20 | | `INVALID DELIVERY DATA` | provided data is not valid | 25 | | `OUTSIDE DELIVERY AREA` | pickup or drop off location is outside delivery zone | 30 | | `TOO MANY PACKAGES` | too many packages within a delivery job | 40 | | `DELIVERY ADDRESS NOT RECOGNIZED` | delivery address is not recognized | 50 | | `PICKUP ADDRESS NOT RECOGNIZED` | pickup address is not recognized | 60 | | `UNKNOWN DELIVERY JOB` | job with provided id not found of doesn't exist | 70 | | `CONTACT DATA INVALID` | invalid contact person data | 80 | | `INVALID COORDINATES` | provided coordinates is not valid | 90 | | `TIME NOT ALLOWED` | pickup or delivery time is not allowed | 100 | | `PAYMENT DECLINED` | payment declined | 110 | | `DUPLICATE JOB` | delivery job already exists | 120 | | `CANNOT TRAVEL TO DELIVERY` | drop off locations is not reachable | 130 | | `CANNOT CANCEL` | cancel is not possible | 140 | | `DATE FORMAT ERROR` | invalid date format | 150 |",
+        "description": "Gets called to validate if there are drivers available and to check if it's possible to deliver one or multiple orders.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3229,7 +3751,7 @@
         }
       }
     },
-    "/cancelJob": {
+    "/integrator/cancelJob": {
       "post": {
         "tags": [
           "Dispatch API"
@@ -4725,7 +5247,7 @@
     "/products/snoozeByPlus": {
       "post": {
         "tags": [
-          "Store API > Deliverect Endpoints"
+          "Store API"
         ],
         "summary": "Mark products out of stock by PLU",
         "description": "Mark products out of stock for a certain amount of time based on their PLU and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past.",
