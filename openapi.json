@@ -2,22 +2,22 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Deliverect Public API",
-    "description": "\nDeliverect allows restaurants to directly connect channels like UberEats, Takeaway.com, Glovo and others with their POS system. More info on features and platforms supported on [https://deliverect.com/](https://deliverect.com/)  This API can be used to integrate additional channels or POS systems, but also by bigger restaurants",
+    "description": " Deliverect allows restaurants to directly connect channels like UberEats, Takeaway.com, Glovo and others with their POS system. More info on features and platforms supported on [https://deliverect.com/](https://deliverect.com/) This API can be used to integrate additional channels or POS systems, but also by bigger restaurants",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://www.api.staging.deliverect.com"
+      "url": "https://api.staging.deliverect.com"
     }
   ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
-        "type": "https",
+        "type": "http",
         "scheme": "bearer"
       },
       "oauth2Auth": {
-        "type": "https",
+        "type": "http",
         "scheme": "oauth2"
       }
     }
@@ -30,56 +30,27 @@
   "tags": [
     {
       "name": "Authentication",
-      "description": "A client_id and client_secret are unique credentials provided to any partner beginning an integration with Deliverect. These can be used to access all customer accounts which we've connected to your partner account. If you have already been provided a partner account and credentials, you can obtain an OAuth token with our Machine to Machine token endpoint and begin making calls with our API. Don't forget to cache this token. You should only request a new one when your current one has expired. You can use this tool(https://jwt.io/) to see the contents of the token. Only certified integrations will be provided partner credentials for our production environment. "
+      "description": " "
     },
     {
       "name": "POS API",
-      "description": "These are endpoints hosted on the deliverect domain. There is a staging environment: https://api.staging.deliverect.com and a production environment https://api.deliverect.com"
-    },
-    {
-      "name": "POS API > Deliverect Endpoints",
-      "description": "These are endpoints hosted on the deliverect domain. There is a staging environment: https://api.staging.deliverect.com and a production environment https://api.deliverect.com"
-    },
-    {
-      "name": "POS API > Partner Webhooks",
-      "description": "Webhooks are endpoints Deliverect will call. It's up to the integrator to make sure these are hosted on their domain. This URL can be configured per location in Deliverect. We also send an HMAC header so that you can verify that orders are indeed coming form Deliverect. The HMAC secret is configured for every integration partner and will be communicated to you in a secure way. Before an HMAC secret is assigned to you, the request is signed using the channelLinkId as HMAC secret. Before certifying the integration, a secure HMAC secret should be set. More than one reporting endpoint can be configured. This way the data can be sent to multiple systems, so for instance the POS, but also the accounting system. At the moment we only support one secret key per customer, not per reporting endpoint."
+      "description": ""
     },
     {
       "name": "Channel API",
-      "description": "If you're a channel, a system where orders get created, and you want to integrate with us, this is the API you can use. This will allow your orders to be injected in the workflow of restaurants. Orders processed through this API follow the same flow as any other order processed by Deliverect. There are two parts, everything under 'Endpoints' are methods that need to be called on our servers. Everything under 'Webhooks' are methods that need to be available on your server and that Deliverect will call. For further guides and information on building a Channel integration, see articles in our API help section. [https://deliverect.zendesk.com/hc/en-us/sections/360005957658-Channel-API](https://deliverect.zendesk.com/hc/en-us/sections/360005957658-Channel-API)"
+      "description": ""
     },
-    {
-      "name": "Channel API > Deliverect Endpoints",
-      "description": "These are endpoints hosted on the deliverect domain. There is a staging environment: https://api.staging.deliverect.com and a production environment https://api.deliverect.com"
-    },
-    {
-      "name": "Channel API > Partner Webhooks",
-      "description": "Before orders can be sent to Deliverect, the right PLU's and menu's should be available on the Channel. This could of course be done maually, but this is prone to mistakes and menu's often change. (additional products, new prices, etc.) Therefore the better way is to implement the menu push webhook so that the online menu can be updated with new information from the POS and/or Deliverect Besides the menu, there's also an endpoint where you can receive status updates on orders that were pushed to Deliverect. This info can be used to optimise when drivers are sent to pick up the food."
-    },
+    
     {
       "name": "Dispatch API",
-      "description": "If you're a delivery service or Logistics service and you want to integrate with us, this is the API you can use. Every time an order needs to be delivered your API will get called, you can then send back the details for delivery. Existing orders might be updated if orders can be combined according to the rules set in Deliverect."
+      "description": ""
     },
-    {
-      "name": "Dispatch API > Deliverect Endpoints"
-    },
-    {
-      "name": "Dispatch API > Partner Webhooks"
-    },
+    
     {
       "name": "Store API"
     },
     {
-      "name": "Store API > Deliverect Endpoints"
-    },
-    {
       "name": "KDS API"
-    },
-    {
-      "name": "KDS API > Deliverect Endpoint"
-    },
-    {
-      "name": "KDS API > Partner Webhooks"
     }
   ],
   "paths": {
@@ -333,7 +304,7 @@
     "/productAndCategories": {
       "post": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Insert/update products and categories",
         "description": "Insert/update Products The 'Source of Truth' in terms of product data and structure is almost always sourced from an integrated POS system. When a POS successfully syncs products with their unique identifiers (PLUs), these will be selected by the customer for inclusion in their menu(s). In turn, orders will be created with these same PLUs and injected into the POS via an ['Order Webhook'](https://developers.deliverect.com/reference/post-orders-webhook) This process does not necessarily need a complete transfer of products stored in the POS, but can involve only a subset of products i.e. 'Online Only products' which a customer can possibly flag as being suitable for selling online. ## Product Model For a full list of all product attributes, see the link below; https://developers.deliverect.com/page/glossary-product-insert Account and Location ID As you can see from the examples the Deliverect accountId and locationId are both set in the body content. These IDs are required and should be obtained via the Register POS webhook.Deleting products There is currently no way to directly delete a product. To achieve the desired effect, a list of products can be pushed again, in which products to be deleted are omitted. ## Duplicate products Where a duplicate PLU exists, the product sync will proceed, but only one of the duplicated items will be created. ## Product sync (GET Products) We require that all POS partners call this endpoint with POS products in response to a GET Request from Deliverect. See the section on Sync Products https://developers.deliverect.com/reference/get-products.Every call to this endpoint will either; **create**, **update** or **delete** products, based on the products that already exist in the specified location. > 📘 Menus vs Products > > We do expect products to be sourced from a POS, but don't have a facility to push structured menus built within a POS into Deliverect. > > This process of 'Menu Building' is fully handled in Deliverect (see guide on this [here](https://developers.deliverect.com/docs/create-a-menu)) > 📘 GTIN((Global Trade Item Number) > > The GTIN / EAN codes can be sent within the products objects but we are not validating them on our end yet! ## Product Configurations For more detailed guidelines on how to structure products and set e.g. price, tax, combos etc see the page below; https://developers.deliverect.com/page/product-configuration",
@@ -923,15 +894,10 @@
     "/productCategories": {
       "get": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Categories for account",
-        "description": "Receive the total number of categories that have been pushed to Deliverect for a customer’s account. You can use this endpoint to cross-check.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "description": "Receive the total number of categories that have been pushed to Deliverect for a customers account. You can use this endpoint to cross-check.",
         "parameters": [
           {
             "name": "where",
@@ -952,7 +918,7 @@
                 "schema": {
                   "type": "string"
                 },
-                "example": null
+                "example": []
               }
             }
           }
@@ -962,7 +928,7 @@
     "/allChannels": {
       "get": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Integrated channels",
         "description": "This will provide all currently channels that we are integrated with. For each, the `name` and `channelId` will be given.",
@@ -1075,7 +1041,7 @@
     "/allAllergens": {
       "get": {
         "tags": [
-          "KDS API > Deliverect Endpoint"
+          "KDS API"
         ],
         "summary": "Allergens and tags",
         "description": "This allows a channel to get allergens and tags existing in Deliverect.",
@@ -1118,7 +1084,7 @@
     "/accounts/{accountId}/brands": {
       "get": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Account Brands",
         "description": "This endpoint provides the existing brands of an account. Brands represent the grouping of a particular offering from a customer, typically a menu concept or otherwise unique aspect. These brands are then individually present on ordering platforms. They could be a range of ghost kitchens, for example. A Deliverect account can have brands configured per <>. The brand is identifiable in orders as a unique ID. > 📘 Brand subscriptions",
@@ -1140,22 +1106,24 @@
                 "schema": {
                   "type": "string"
                 },
-                "example": [{
-                  "brands": [
-                    {
-                      "name": "Brand 1",
-                      "brandId": "601bd819bfc52ecea142bf9f"
-                    },
-                    {
-                      "name": "Brand 2",
-                      "brandId": "602131b4639578ac0da4588d"
-                    },
-                    {
-                      "name": "Brand 3",
-                      "brandId": "602cecade10d4dc9fe0f7fdc"
-                    }
-                  ]
-                }]
+                "example": [
+                  {
+                    "brands": [
+                      {
+                        "name": "Brand 1",
+                        "brandId": "601bd819bfc52ecea142bf9f"
+                      },
+                      {
+                        "name": "Brand 2",
+                        "brandId": "602131b4639578ac0da4588d"
+                      },
+                      {
+                        "name": "Brand 3",
+                        "brandId": "602cecade10d4dc9fe0f7fdc"
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -1165,7 +1133,7 @@
     "/updateBill/{locationId}": {
       "post": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Bill Update",
         "description": "Deliver the details of a bill closed on the POS to Deliverect.",
@@ -1174,66 +1142,68 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "id": "R29532LF",
-                  "status": 20,
-                  "tableId": "T1",
-                  "createdAt": "2023-08-18T14:49:39.379000Z",
-                  "lastUpdated": "2023-08-18T14:49:39.379000Z",
-                  "closedAt": "2023-08-18T14:49:39.379000Z",
-                  "decimalDigits": 2,
-                  "discountTotal": 100,
-                  "discounts": [
-                    {
-                      "name": "Our company birthday discount",
-                      "total": 100
-                    }
-                  ],
-                  "surchargesTotal": 200,
-                  "surcharges": [
-                    {
-                      "name": "Take-away",
-                      "total": 200
-                    }
-                  ],
-                  "taxTotal": 48,
-                  "taxes": [
-                    {
-                      "name": "6% VAT",
-                      "total": 48
-                    }
-                  ],
-                  "total": 800,
-                  "totalDue": 400,
-                  "items": [
-                    {
-                      "plu": "PLU-01",
-                      "name": "My first product",
-                      "quantity": 1,
-                      "price": 300
-                    },
-                    {
-                      "plu": "PLU-02",
-                      "name": "My second product",
-                      "quantity": 1,
-                      "price": 400,
-                      "subItems": [
-                        {
-                          "plu": "PLU-03",
-                          "name": "My modifier",
-                          "quantity": 1,
-                          "price": 0
-                        }
-                      ]
-                    }
-                  ],
-                  "payments": [
-                    {
-                      "name": "Cash",
-                      "total": 400
-                    }
-                  ]
-                }]
+                "examples": [
+                  {
+                    "id": "R29532LF",
+                    "status": 20,
+                    "tableId": "T1",
+                    "createdAt": "2023-08-18T14:49:39.379000Z",
+                    "lastUpdated": "2023-08-18T14:49:39.379000Z",
+                    "closedAt": "2023-08-18T14:49:39.379000Z",
+                    "decimalDigits": 2,
+                    "discountTotal": 100,
+                    "discounts": [
+                      {
+                        "name": "Our company birthday discount",
+                        "total": 100
+                      }
+                    ],
+                    "surchargesTotal": 200,
+                    "surcharges": [
+                      {
+                        "name": "Take-away",
+                        "total": 200
+                      }
+                    ],
+                    "taxTotal": 48,
+                    "taxes": [
+                      {
+                        "name": "6% VAT",
+                        "total": 48
+                      }
+                    ],
+                    "total": 800,
+                    "totalDue": 400,
+                    "items": [
+                      {
+                        "plu": "PLU-01",
+                        "name": "My first product",
+                        "quantity": 1,
+                        "price": 300
+                      },
+                      {
+                        "plu": "PLU-02",
+                        "name": "My second product",
+                        "quantity": 1,
+                        "price": 400,
+                        "subItems": [
+                          {
+                            "plu": "PLU-03",
+                            "name": "My modifier",
+                            "quantity": 1,
+                            "price": 0
+                          }
+                        ]
+                      }
+                    ],
+                    "payments": [
+                      {
+                        "name": "Cash",
+                        "total": 400
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -1255,7 +1225,9 @@
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples": ["application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               }
             },
@@ -1274,7 +1246,9 @@
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               }
             },
@@ -1293,7 +1267,7 @@
     "/orderStatus/{orderId}": {
       "post": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Update order status",
         "description": "This endpoint allows a POS to update the status of an order at each stage in its preparation. It also allows for the modification of the pickupTime",
@@ -1302,13 +1276,15 @@
             "*/*": {
               "schema": {
                 "type": "string",
-                "examples": [{
-                  "orderId": "5d****e3448c290010****53",
-                  "status": 10,
-                  "reason": "new order",
-                  "timeStamp": "2019-09-05 07:44:15.000Z",
-                  "receiptId": "1234"
-                }]
+                "examples": [
+                  {
+                    "orderId": "5d****e3448c290010****53",
+                    "status": 10,
+                    "reason": "new order",
+                    "timeStamp": "2019-09-05 07:44:15.000Z",
+                    "receiptId": "1234"
+                  }
+                ]
               }
             }
           }
@@ -1378,7 +1354,7 @@
     "/updatePreparationTime": {
       "post": {
         "tags": [
-          "KDS API > Deliverect Endpoint"
+          "KDS API"
         ],
         "summary": "Update Order Preparation Time",
         "requestBody": {
@@ -1386,10 +1362,12 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "order": "string",
-                  "minutes": 0
-                }]
+                "examples": [
+                  {
+                    "order": "string",
+                    "minutes": 0
+                  }
+                ]
               }
             }
           }
@@ -1407,7 +1385,7 @@
     "/accounts": {
       "get": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Get linked accounts",
         "description": "Every restaurant has an account. When such an account is linked to your integrator account, it will show up when doing this call. Please note, that here and later all dates and times, coming from/to Deliverect are UTC. #### Account types: | Account type | Integer representation | | - | - | | Partner | 1 | | Chain | 2 | | Customer | 3 | #### List of currencies: | Currency | Integer representation | | - | - | | Euro | 1 | | British Pound Sterling | 2 | | United States Dollar | 3 | | Canadian Dollar | 4 | | New Zealand Dollar | 5 | | Australian Dollar | 6 | | Bahraini Dinar | 7 | | United Arab Emirates Dirham | 8 | | Swedish Krona | 9 | | Swiss Franc | 10 | | Romanian Leu | 11 | | Moroccan Dirham | 12 | | Polish Zloty | 13 | | Norwegian Krone | 14 | | Mexican Peso | 15 | | Danish Krone | 16 | | Kuwaiti Dinar | 17 | | Saudi Riyal | 18 | | Afghan Afghani | 19 | | Albanian Lek | 20 | | Armenian Dram | 21 | | Netherlands Antillean Guilder | 22 | | Angolan Kwanza | 23 | | Argentine Peso | 24 | | Aruban Florin | 25 | | Azerbaijani Manat | 26 | | Bosnia-Herzegovina Convertible Mark | 27 | | Barbadian Dollar | 28 | | Bangladeshi Taka | 29 | | Bulgarian Lev | 30 | | Burundian Franc | 31 | | Bermudan Dollar | 32 | | Brunei Dollar | 33 | | Bolivian Boliviano | 34 | | Brazilian Real | 35 | | Bahamian Dollar | 36 | | Bitcoin | 37 | | Bhutanese Ngultrum | 38 | | Botswanan Pula | 39 | | Belarusian Ruble | 40 | | Belize Dollar | 41 | | Congolese Franc | 42 | | Chilean Unit of Account (UF) | 43 | | Chilean Peso | 44 | | Chinese Yuan (Offshore) | 45 | | Chinese Yuan | 46 | | Colombian Peso | 47 | | Costa Rican Colón | 48 | | Cuban Convertible Peso | 49 | | Cuban Peso | 50 | | Cape Verdean Escudo | 51 | | Czech Republic Koruna | 52 | | Djiboutian Franc | 53 | | Dominican Peso | 54 | | Algerian Dinar | 55 | | Egyptian Pound | 56 | | Eritrean Nakfa | 57 | | Ethiopian Birr | 58 | | Fijian Dollar | 59 | | Falkland Islands Pound | 60 | | Georgian Lari | 61 | | Guernsey Pound | 62 | | Ghanaian Cedi | 63 | | Gibraltar Pound | 64 | | Gambian Dalasi | 65 | | Guinean Franc | 66 | | Guatemalan Quetzal | 67 | | Guyanaese Dollar | 68 | | Hong Kong Dollar | 69 | | Honduran Lempira | 70 | | Croatian Kuna | 71 | | Haitian Gourde | 72 | | Hungarian Forint | 73 | | Indonesian Rupiah | 74 | | Israeli New Sheqel | 75 | | Manx pound | 76 | | Indian Rupee | 77 | | Iraqi Dinar | 78 | | Iranian Rial | 79 | | Icelandic Króna | 80 | | Jersey Pound | 81 | | Jamaican Dollar | 82 | | Jordanian Dinar | 83 | | Japanese Yen | 84 | | Kenyan Shilling | 85 | | Kyrgystani Som | 86 | | Cambodian Riel | 87 | | Comorian Franc | 88 | | North Korean Won | 89 | | South Korean Won | 90 | | Cayman Islands Dollar | 91 | | Kazakhstani Tenge | 92 | | Laotian Kip | 93 | | Lebanese Pound | 94 | | Sri Lankan Rupee | 95 | | Liberian Dollar | 96 | | Lesotho Loti | 97 | | Libyan Dinar | 98 | | Moldovan Leu | 99 | | Malagasy Ariary | 100 | | Macedonian Denar | 101 | | Myanma Kyat | 102 | | Mongolian Tugrik | 103 | | Macanese Pataca | 104 | | Mauritanian Ouguiya (pre-2018) | 105 | | Mauritanian Ouguiya | 106 | | Mauritian Rupee | 107 | | Maldivian Rufiyaa | 108 | | Malawian Kwacha | 109 | | Malaysian Ringgit | 110 | | Mozambican Metical | 111 | | Namibian Dollar | 112 | | Nigerian Naira | 113 | | Nicaraguan Córdoba | 114 | | Nepalese Rupee | 115 | | Omani Rial | 116 | | Panamanian Balboa | 117 | | Peruvian Nuevo Sol | 118 | | Papua New Guinean Kina | 119 | | Philippine Peso | 120 | | Pakistani Rupee | 121 | | Paraguayan Guarani | 122 | | Qatari Rial | 123 | | Serbian Dinar | 124 | | Russian Ruble | 125 | | Rwandan Franc | 126 | | Solomon Islands Dollar | 127 | | Seychellois Rupee | 128 | | Sudanese Pound | 129 | | Singapore Dollar | 130 | | Saint Helena Pound | 131 | | Sierra Leonean Leone | 132 | | Somali Shilling | 133 | | Surinamese Dollar | 134 | | South Sudanese Pound | 135 | | São Tomé and Príncipe Dobra (pre-2018) | 136 | | São Tomé and Príncipe Dobra | 137 | | Salvadoran Colón | 138 | | Syrian Pound | 139 | | Swazi Lilangeni | 140 | | Thai Baht | 141 | | Tajikistani Somoni | 142 | | Turkmenistani Manat | 143 | | Tunisian Dinar | 144 | | Tongan Pa'anga | 145 | | Turkish Lira | 146 | | Trinidad and Tobago Dollar | 147 | | New Taiwan Dollar | 148 | | Tanzanian Shilling | 149 | | Ukrainian Hryvnia | 150 | | Ugandan Shilling | 151 | | Uruguayan Peso | 152 | | Uzbekistan Som | 153 | | Venezuelan Bolívar Fuerte | 154 | | Vietnamese Dong | 155 | | Vanuatu Vatu | 156 | | Samoan Tala | 157 | | CFA Franc BEAC | 158 | | East Caribbean Dollar | 159 | | CFA Franc BCEAO | 160 | | CFP Franc | 161 | | Yemeni Rial | 162 | | South African Rand | 163 | | Zambian Kwacha | 164 | | Zimbabwean Dollar | 165 |",
@@ -1418,79 +1396,105 @@
               "Server": {
                 "schema": {
                   "type": "string",
-                  "examples": ["nginx/1.13.9"]
+                  "examples": [
+                    "nginx/1.13.9"
+                  ]
                 }
               },
               "Date": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Wed, 20 Feb 2019 13:44:37 GMT"]
+                  "examples": [
+                    "Wed, 20 Feb 2019 13:44:37 GMT"
+                  ]
                 }
               },
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               },
               "Content-Length": {
                 "schema": {
                   "type": "integer",
-                  "examples": ["6016"]
+                  "examples": [
+                    "6016"
+                  ]
                 }
               },
               "Connection": {
                 "schema": {
                   "type": "string",
-                  "examples": ["keep-alive"]
+                  "examples": [
+                    "keep-alive"
+                  ]
                 }
               },
               "X-Total-Count": {
                 "schema": {
                   "type": "integer",
-                  "examples":[ "13"]
+                  "examples": [
+                    "13"
+                  ]
                 }
               },
               "Cache-Control": {
                 "schema": {
                   "type": "string",
-                  "examples": ["max-age=20"]
+                  "examples": [
+                    "max-age=20"
+                  ]
                 }
               },
               "Expires": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Wed, 20 Feb 2019 13:44:57 GMT"]
+                  "examples": [
+                    "Wed, 20 Feb 2019 13:44:57 GMT"
+                  ]
                 }
               },
               "Last-Modified": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Sun, 17 Feb 2019 18:31:08 GMT"]
+                  "examples": [
+                    "Sun, 17 Feb 2019 18:31:08 GMT"
+                  ]
                 }
               },
               "Access-Control-Allow-Origin": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "*"]
+                  "examples": [
+                    "*"
+                  ]
                 }
               },
               "Access-Control-Allow-Headers": {
                 "schema": {
                   "type": "string",
-                  "examples": ["User-Agent,Keep-Alive,Content-Type,Authorization"]
+                  "examples": [
+                    "User-Agent,Keep-Alive,Content-Type,Authorization"
+                  ]
                 }
               },
               "Access-Control-Allow-Methods": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "GET, POST, OPTIONS, DELETE, PUT, PATCH"]
+                  "examples": [
+                    "GET, POST, OPTIONS, DELETE, PUT, PATCH"
+                  ]
                 }
               },
               "Access-Control-Allow-Credentials": {
                 "schema": {
                   "type": "boolean",
-                  "examples":[ "true"]
+                  "examples": [
+                    "true"
+                  ]
                 }
               }
             },
@@ -1740,67 +1744,89 @@
               "Server": {
                 "schema": {
                   "type": "string",
-                  "examples": ["nginx/1.13.9"]
+                  "examples": [
+                    "nginx/1.13.9"
+                  ]
                 }
               },
               "Date": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Wed, 27 Feb 2019 12:14:10 GMT"]
+                  "examples": [
+                    "Wed, 27 Feb 2019 12:14:10 GMT"
+                  ]
                 }
               },
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples": ["application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               },
               "Content-Length": {
                 "schema": {
                   "type": "integer",
-                  "examples":[ "91"]
+                  "examples": [
+                    "91"
+                  ]
                 }
               },
               "Connection": {
                 "schema": {
                   "type": "string",
-                  "examples": ["keep-alive"]
+                  "examples": [
+                    "keep-alive"
+                  ]
                 }
               },
               "WWW-Authenticate": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Basic realm={{eve}"]
+                  "examples": [
+                    "Basic realm={{eve}"
+                  ]
                 }
               },
               "Cache-Control": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "max-age=20"]
+                  "examples": [
+                    "max-age=20"
+                  ]
                 }
               },
               "Expires": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "Wed, 27 Feb 2019 12:14:30 GMT"]
+                  "examples": [
+                    "Wed, 27 Feb 2019 12:14:30 GMT"
+                  ]
                 }
               },
               "Access-Control-Allow-Origin": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "*"]
+                  "examples": [
+                    "*"
+                  ]
                 }
               },
               "Access-Control-Allow-Headers": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Content-Type,Authorization"]
+                  "examples": [
+                    "Content-Type,Authorization"
+                  ]
                 }
               },
               "Access-Control-Allow-Methods": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "GET,PUT,POST,DELETE,OPTIONS"]
+                  "examples": [
+                    "GET,PUT,POST,DELETE,OPTIONS"
+                  ]
                 }
               }
             },
@@ -1825,7 +1851,7 @@
     "/locations": {
       "get": {
         "tags": [
-          "Store API > Deliverect Endpoints"
+          "Store API"
         ],
         "summary": "Get locations",
         "description": "Per physical restaurant location, there will be a *Location*. This endpoint can be used to query them. You can have to specify an account, otherwise the locations of your own account will be returned",
@@ -1848,79 +1874,105 @@
               "Server": {
                 "schema": {
                   "type": "string",
-                  "examples": ["nginx/1.14.1"]
+                  "examples": [
+                    "nginx/1.14.1"
+                  ]
                 }
               },
               "Date": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Thu, 14 Feb 2019 16:24:59 GMT"]
+                  "examples": [
+                    "Thu, 14 Feb 2019 16:24:59 GMT"
+                  ]
                 }
               },
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples": ["application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               },
               "Content-Length": {
                 "schema": {
                   "type": "integer",
-                  "examples":[ "1270"]
+                  "examples": [
+                    "1270"
+                  ]
                 }
               },
               "Connection": {
                 "schema": {
                   "type": "string",
-                  "examples": ["keep-alive"]
+                  "examples": [
+                    "keep-alive"
+                  ]
                 }
               },
               "X-Total-Count": {
                 "schema": {
                   "type": "integer",
-                  "examples": ["1"]
+                  "examples": [
+                    "1"
+                  ]
                 }
               },
               "Cache-Control": {
                 "schema": {
                   "type": "string",
-                  "examples": ["max-age=20"]
+                  "examples": [
+                    "max-age=20"
+                  ]
                 }
               },
               "Expires": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "Thu, 14 Feb 2019 16:25:19 GMT"]
+                  "examples": [
+                    "Thu, 14 Feb 2019 16:25:19 GMT"
+                  ]
                 }
               },
               "Last-Modified": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Thu, 14 Feb 2019 13:57:59 GMT"]
+                  "examples": [
+                    "Thu, 14 Feb 2019 13:57:59 GMT"
+                  ]
                 }
               },
               "Access-Control-Allow-Origin": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "*"]
+                  "examples": [
+                    "*"
+                  ]
                 }
               },
               "Access-Control-Allow-Headers": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "User-Agent,Keep-Alive,Content-Type,Authorization"]
+                  "examples": [
+                    "User-Agent,Keep-Alive,Content-Type,Authorization"
+                  ]
                 }
               },
               "Access-Control-Allow-Methods": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "GET, POST, OPTIONS, DELETE, PUT, PATCH"]
+                  "examples": [
+                    "GET, POST, OPTIONS, DELETE, PUT, PATCH"
+                  ]
                 }
               },
               "Access-Control-Allow-Credentials": {
                 "schema": {
                   "type": "boolean",
-                  "examples":[ "true"]
+                  "examples": [
+                    "true"
+                  ]
                 }
               }
             },
@@ -2073,7 +2125,7 @@
     "/channelLinks": {
       "get": {
         "tags": [
-          "POS API > Deliverect Endpoints"
+          "POS API"
         ],
         "summary": "Channel Links",
         "parameters": [
@@ -2104,7 +2156,7 @@
     "/register": {
       "post": {
         "tags": [
-          "POS API > Partner Webhooks"
+          "POS API"
         ],
         "summary": "Register POS",
         "description": "Gets called when POS is being registered in Deliverect. For instance when a new customer adds a location you will receive the register event. After this event it should be possible to sync products and insert orders into the POS. Webhook payload contains information such as: * Deliverect account id (`accountId`) * Deliverect location id (`locationId`) * External location id provided by the POS (`externalLocationId`) We always expect a JSON result which contains the endpoints to: * Sync products from the POS to Deliverect (`syncProductsURL`) * Insert order from Deliverect to the POS (`ordersWebhookURL`) * Sync tables from the POS to Deliverect (`syncTablesURL`) * Sync floors from the POS to Deliverect (`syncFloorsURL`) If an endpoint is empty or not included in this response we will not use it.",
@@ -2118,7 +2170,9 @@
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples": ["application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               }
             },
@@ -2127,7 +2181,7 @@
                 "schema": {
                   "type": "object"
                 },
-                "example":{
+                "example": {
                   "ordersWebhookURL": "https://integrator.com/ordersWebhookURL",
                   "syncProductsURL": "https://integrator.com/syncProductsURL",
                   "syncTablesURL": "https://integrator.com/syncTablesURL",
@@ -2139,30 +2193,12 @@
         }
       }
     },
-    "/get": {
+    "/products": {
       "tags": [
-        "POS API > Partner Webhooks"
+        "POS API"
       ],
       "summary": "Get products",
       "description": "Gets called when the user initiates a product sync from Deliverect. Depending on your setup there are two options. If you choose for an a-sync product sync this endpoint should return an empty HTTP 200 response. You can then a-sync send us the products to the given endpoint. If you choose for a sync way of working. You can directly choose to send us the products in exact the same format as you would in an a-sync way. For the format of sending us products please have a look here [product sync](https://developers.deliverect.com/#c102c78d-46bb-42e7-8c53-166978f71aa4)",
-      "parameters": [
-        {
-          "name": "Accept",
-          "in": "header",
-          "schema": {
-            "type": "string"
-          },
-          "example": "application/json"
-        },
-        {
-          "name": "X-Server-Authorization-HMAC-SHA256",
-          "in": "header",
-          "schema": {
-            "type": "string"
-          },
-          "example": "HMAC-Signature"
-        }
-      ],
       "responses": {
         "200": {
           "description": "200",
@@ -2180,7 +2216,7 @@
     "/getTables/": {
       "get": {
         "tags": [
-          "POS API > Partner Webhooks"
+          "POS API"
         ],
         "summary": "Sync Tables",
         "description": "Endpoint to get tables from the POS.",
@@ -2239,7 +2275,7 @@
     "/getFloors/": {
       "get": {
         "tags": [
-          "POS API > Partner Webhooks"
+          "POS API"
         ],
         "summary": "Sync Floors",
         "description": "Endpoint to get floors from the POS.",
@@ -2276,7 +2312,7 @@
     "/{channelName}/order/{channelLinkId}": {
       "post": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "Cancel Order",
         "description": "Your generic channel integration can use this endpoint to place a new order for a linked location. Note that, when sending a new order, Deliverect will check whether the party sending the order has the correct **scope** to do so. If not, they are considered unauthorized. The scope for generic channels is communicated to integrating parties together with the API Keys, and is checked in the request target URL only. Therefore, make sure to replace the ChannelName with the scope. For `orderType`, send one of these values (as an integer): | Type | Integer value | |-|-| | pickup | 1 | | delivery | 2 | | eat in | 3 | | curbside | 4 | For payment type, send one of these values: | Payment type | Integer value | |-|-| | credit card online | 0 | | cash | 1 | --- #### Tax exclusive orders If a store on your channel works tax exclusively, your channel API should send orders from that store in a slightly different way. First of all, always make sure that the channel link for this store has the Is Tax Exclusive? setting (under Advanced Settings) enabled in Deliverect. This setting determines whether Deliverect will parse orders as tax exclusive or not. As for the order itself, this is what must be taken into account: - Prices of products that are sent must **exclude** taxes - `deliveryCost` and `serviceCharge` must also **exclude** taxes, total taxes for those should be sent with keys `deliveryCostTax` and `serviceChargeTax`, respectively - The total payment amount must **include** taxes - An extra array `taxes` must be sent, which details all tax amounts (excluding `deliveryCostTax` and `serviceChargeTax`) per tax class The table below outlines the structure for the dicts in `taxes`, which each describe a tax class. | Key | Value | |-|-| | `taxClassId` | the ID corresponding to this tax class as used by Deliverect | | `name` | the display name for this category of taxes, which is how it should be printed on a receipt | | `total` | the sum of all tax amounts for this category | --- #### A note on `taxClassId`s We have yet to formalize tax class IDs. In the future, expect menu push requests to include which tax classes (by ID) should be applied to which product(s). For now, we will not use the provided value sent by your channel API. --- Make sure to send all tax amounts as integers, bearing in mind the number of `decimalDigits`. In the end, the equation below must always hold true: ```text <payment total> = <sum of prices of all products in the order> + deliveryCost + serviceCharge + deliveryCostTax + serviceChargeTax + <sum of all tax amounts in the taxes array> ``` Make sure to check out the example request for a tax exclusive order on the right. --- #### About estimated pickup time If you look at the example requests on the right, you'll notice the `estimatedPickupTime` field. Make sure to fill this in with a valid timestamp in the format used in the example request. If your channel doesn't use an estimate for the pickup time, the easiest thing to do is to reuse `pickupTime`, and just send the same value for `estimatedPickupTime`. --- #### Canceling an order **Note:** Your channel is not yet required to support order cancellation in order to become or remain certified. If your channel supports canceling an order, you can send a request to Deliverect that will have the order canceled. Note that your channel API, if it supports canceling an order, should only attempt to do so for orders that have not yet been accepted. Once an order has been accepted by the POS, it can no longer be canceled. To cancel an order, send it to the order endpoint again (like you would for a new order), and make sure to add a top-level entry with key `cancellationReason`, which has a string value to indicate the reason your channel is sending a cancellation request for this order. Note that you do not have to include all data that was in the original order, but only the information needed to identify the order. This will give the order the `CANCEL` status. Once the order is sent to the POS with that status, the POS can confirm the cancellation, after which the order will have the `CANCELED` status, and can effectively be considered canceled. To see what a `CANCEL` order looks like, select the corresponding example from the drop-down box on the right. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
@@ -2285,73 +2321,75 @@
             "*/*": {
               "schema": {
                 "type": "string",
-                "examples": [{
-                  "channelOrderId": "{{channelOrderId-001}}",
-                  "channelOrderDisplayId": "{{channelOrderDisplayId-001}}",
-                  "channelLinkId": "{{channelLinkId-001}}",
-                  "by": "",
-                  "orderType": 2,
-                  "table": "Table 23",
-                  "channel": 10000,
-                  "pickupTime": "2020-03-09T17:17:38Z",
-                  "estimatedPickupTime": "2020-03-09T17:17:38Z",
-                  "deliveryTime": "2020-03-09T17:17:38Z",
-                  "deliveryIsAsap": true,
-                  "courier": "restaurant",
-                  "customer": {
-                    "name": "Customer name",
-                    "companyName": "Deliverect",
-                    "phoneNumber": "0123456789",
-                    "email": "customer@deliverect.com",
-                    "tin": "taxIdentificationNumber"
-                  },
-                  "deliveryAddress": {
-                    "street": "The Krook",
-                    "streetNumber": "4",
-                    "postalCode": "9000",
-                    "city": "Gent",
-                    "extraAddressInfo": ""
-                  },
-                  "orderIsAlreadyPaid": true,
-                  "payment": {
-                    "amount": 975,
-                    "type": 3
-                  },
-                  "note": "This is a test note",
-                  "items": [
-                    {
-                      "plu": "T5",
-                      "name": "Bier (Hertog Jan)",
-                      "price": 325,
-                      "quantity": 1,
-                      "remark": "",
-                      "subItems": [
-                        {
-                          "plu": "SI2",
-                          "name": "Fluitje",
-                          "price": 0,
-                          "quantity": 1,
-                          "remark": "",
-                          "subItems": []
-                        }
-                      ]
+                "examples": [
+                  {
+                    "channelOrderId": "{{channelOrderId-001}}",
+                    "channelOrderDisplayId": "{{channelOrderDisplayId-001}}",
+                    "channelLinkId": "{{channelLinkId-001}}",
+                    "by": "",
+                    "orderType": 2,
+                    "table": "Table 23",
+                    "channel": 10000,
+                    "pickupTime": "2020-03-09T17:17:38Z",
+                    "estimatedPickupTime": "2020-03-09T17:17:38Z",
+                    "deliveryTime": "2020-03-09T17:17:38Z",
+                    "deliveryIsAsap": true,
+                    "courier": "restaurant",
+                    "customer": {
+                      "name": "Customer name",
+                      "companyName": "Deliverect",
+                      "phoneNumber": "0123456789",
+                      "email": "customer@deliverect.com",
+                      "tin": "taxIdentificationNumber"
                     },
-                    {
-                      "plu": "SO1",
-                      "name": "Cali SALMON",
-                      "price": 550,
-                      "quantity": 1,
-                      "remark": "Don't add peper",
-                      "subItems": []
-                    }
-                  ],
-                  "decimalDigits": 2,
-                  "numberOfCustomers": 1,
-                  "deliveryCost": 0,
-                  "serviceCharge": 0,
-                  "discountTotal": 0,
-                  "tip": 100
-                }]
+                    "deliveryAddress": {
+                      "street": "The Krook",
+                      "streetNumber": "4",
+                      "postalCode": "9000",
+                      "city": "Gent",
+                      "extraAddressInfo": ""
+                    },
+                    "orderIsAlreadyPaid": true,
+                    "payment": {
+                      "amount": 975,
+                      "type": 3
+                    },
+                    "note": "This is a test note",
+                    "items": [
+                      {
+                        "plu": "T5",
+                        "name": "Bier (Hertog Jan)",
+                        "price": 325,
+                        "quantity": 1,
+                        "remark": "",
+                        "subItems": [
+                          {
+                            "plu": "SI2",
+                            "name": "Fluitje",
+                            "price": 0,
+                            "quantity": 1,
+                            "remark": "",
+                            "subItems": []
+                          }
+                        ]
+                      },
+                      {
+                        "plu": "SO1",
+                        "name": "Cali SALMON",
+                        "price": 550,
+                        "quantity": 1,
+                        "remark": "Don't add peper",
+                        "subItems": []
+                      }
+                    ],
+                    "decimalDigits": 2,
+                    "numberOfCustomers": 1,
+                    "deliveryCost": 0,
+                    "serviceCharge": 0,
+                    "discountTotal": 0,
+                    "tip": 100
+                  }
+                ]
               }
             }
           }
@@ -2405,7 +2443,7 @@
     "/{channelName}/menuStatus/{_id}": {
       "post": {
         "tags": [
-          "Channel API > Partner Webhooks"
+          "Channel API"
         ],
         "summary": "Menu Update (Async)",
         "requestBody": {
@@ -2447,7 +2485,7 @@
     "/{channelName}/updateStoreStatus/{channelLinkId}": {
       "post": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "Update Store Status (open/closed)",
         "requestBody": {
@@ -2455,10 +2493,12 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "status": "closed",
-                  "reason": "Too many failed orders"
-                }]
+                "examples": [
+                  {
+                    "status": "closed",
+                    "reason": "Too many failed orders"
+                  }
+                ]
               }
             }
           }
@@ -2494,7 +2534,7 @@
     "/{channelName}/courierUpdate/{channelLinkId}": {
       "post": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "Update Courier Status",
         "requestBody": {
@@ -2502,25 +2542,27 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "channelOrderId": "63171d******d34b5efe",
-                  "courierUpdate": {
-                    "status": 85,
-                    "arrivalTime": "2022-10-25T16:24:40.482000Z",
-                    "deliveryTime": "2022-10-25T16:24:40.482000Z",
-                    "courier": {
-                      "firstName": "Joe",
-                      "lastName": "Driver",
-                      "phoneNumber": "+44 20 3936 1162",
-                      "coordinates": {
-                        "coordinates": [
-                          -0.0785,
-                          51.52081
-                        ]
+                "examples": [
+                  {
+                    "channelOrderId": "63171d******d34b5efe",
+                    "courierUpdate": {
+                      "status": 85,
+                      "arrivalTime": "2022-10-25T16:24:40.482000Z",
+                      "deliveryTime": "2022-10-25T16:24:40.482000Z",
+                      "courier": {
+                        "firstName": "Joe",
+                        "lastName": "Driver",
+                        "phoneNumber": "+44 20 3936 1162",
+                        "coordinates": {
+                          "coordinates": [
+                            -0.0785,
+                            51.52081
+                          ]
+                        }
                       }
                     }
                   }
-                }]
+                ]
               }
             }
           }
@@ -2556,7 +2598,7 @@
     "/tables/{locationId}": {
       "get": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "GET POS tables",
         "description": "Retrieves all tables and floors registered in a POS at a specific location.",
@@ -2593,43 +2635,57 @@
               "Access-Control-Allow-Methods": {
                 "schema": {
                   "type": "string",
-                  "examples": ["DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT"]
+                  "examples": [
+                    "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT"
+                  ]
                 }
               },
               "Access-Control-Allow-Origin": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "*"]
+                  "examples": [
+                    "*"
+                  ]
                 }
               },
               "Content-Length": {
                 "schema": {
                   "type": "integer",
-                  "examples": ["458"]
+                  "examples": [
+                    "458"
+                  ]
                 }
               },
               "Content-Type": {
                 "schema": {
                   "type": "string",
-                  "examples":[ "application/json"]
+                  "examples": [
+                    "application/json"
+                  ]
                 }
               },
               "Date": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Tue, 24 Nov 2020 20:47:46 GMT"]
+                  "examples": [
+                    "Tue, 24 Nov 2020 20:47:46 GMT"
+                  ]
                 }
               },
               "Server": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Eve/1.1.1 Werkzeug/1.0.1 Python/3.8.0"]
+                  "examples": [
+                    "Eve/1.1.1 Werkzeug/1.0.1 Python/3.8.0"
+                  ]
                 }
               },
               "X-Protected-By": {
                 "schema": {
                   "type": "string",
-                  "examples": ["Sqreen"]
+                  "examples": [
+                    "Sqreen"
+                  ]
                 }
               }
             },
@@ -2721,7 +2777,7 @@
     "/fulfillment/validate": {
       "post": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "Dispatch Availability",
         "requestBody": {
@@ -2729,22 +2785,24 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "channelLinkId": "6220a195af10fe8e6121257f",
-                  "deliveryLocations": {
-                    "deliveryTime": "2022-08-08T11:00:00Z",
-                    "packageSize": "unknown",
-                    "name": "customer name",
-                    "source": "customer address",
-                    "phone": "+111111111",
-                    "coordinates": {
-                      "coordinates": [
-                        -113,
-                        53
-                      ]
+                "examples": [
+                  {
+                    "channelLinkId": "6220a195af10fe8e6121257f",
+                    "deliveryLocations": {
+                      "deliveryTime": "2022-08-08T11:00:00Z",
+                      "packageSize": "unknown",
+                      "name": "customer name",
+                      "source": "customer address",
+                      "phone": "+111111111",
+                      "coordinates": {
+                        "coordinates": [
+                          -113,
+                          53
+                        ]
+                      }
                     }
                   }
-                }]
+                ]
               }
             }
           }
@@ -2762,7 +2820,7 @@
     "/{channelName}/updateRating": {
       "post": {
         "tags": [
-          "Channel API > Deliverect Endpoints"
+          "Channel API"
         ],
         "summary": "Order Rating Update",
         "description": "Your generic channel integration can use this endpoint to update rating for previously placed order. Note that, when sending rating update, Deliverect will check whether the party sending the order has the correct scope to do so. If not, they are considered unauthorized. The scope for generic channels is communicated to integrating parties, and is checked in the request target URL only. Therefore, make sure this URL correctly contains the scope. As a payload we always expect a JSON that contains: * Channel order id (`channelOrderId`) * Date(UTC) when order was placed in ISO 8601 format (`orderDate`) * Id of the channel link (`channelLinkId`) * Array of rating objects (`rating`) * Subject of the rating. See allowed values in Rating Subjects table (`subject`) * Rating value from 0 to 10 (`rating`) * [Optional] Comment for the rating (`comment`) * [Optional] Reason for negative rating. See allowed values in Rating Reasons table (`reason`) #### Rating Subjects | Subject | Integer value | | - | - | | Restaurant | 1 | | Delivery | 2 | #### Rating reasons | Reason | Integer value | | - | - | | Item missing | 1 | | Order issue | 2 | | Order is wrong | 3 | | Food isn't fresh | 4 | | Food is cold | 5 | | Box was opened | 6 | | Delivery late | 7 | | Delivery issue | 8 | | Rude staff | 9 | | No issues | 10000 |",
@@ -2771,23 +2829,25 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "channelOrderId": "CXTDBKMZ-1229",
-                  "orderDate": "2021-04-13T11:53:34.453000Z",
-                  "channelLinkId": "606d8489fcd8eddf13b121a6",
-                  "rating": [
-                    {
-                      "reason": 10000,
-                      "rating": 5,
-                      "comment": "Food was amazing.",
-                      "subject": 1
-                    },
-                    {
-                      "rating": 5,
-                      "subject": 2
-                    }
-                  ]
-                }]
+                "examples": [
+                  {
+                    "channelOrderId": "CXTDBKMZ-1229",
+                    "orderDate": "2021-04-13T11:53:34.453000Z",
+                    "channelLinkId": "606d8489fcd8eddf13b121a6",
+                    "rating": [
+                      {
+                        "reason": 10000,
+                        "rating": 5,
+                        "comment": "Food was amazing.",
+                        "subject": 1
+                      },
+                      {
+                        "rating": 5,
+                        "subject": 2
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -2823,7 +2883,7 @@
     "/fulfillment/generic/events": {
       "post": {
         "tags": [
-          "Dispatch API > Deliverect Endpoints"
+          "Dispatch API"
         ],
         "summary": "Update delivery",
         "description": "This webhook allows to persist updates from third party delivery systems to Deliverect. Currently updates to following delivery information are supported. See examples for technical details. - delivery status - pickup time & eta - delivery time & eta - courier information ##### Delivery job statuses: Following delivery job statuses exist in deliverect: | Status name | Integer value | |-|-| | `IN_DELIVERY` | 80 | | `EN_ROUTE_TO_PICKUP` | 83 | | `ARRIVED_AT_PICKUP` | 85 | | `EN_ROUTE_TO_DROPOFF` | 87 | | `ARRIVED_AT_DROPOFF` | 89 | | `DELIVERED` | 90 | ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
@@ -2832,26 +2892,28 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "deliveryJobId": "602***66a",
-                  "externalJobId": "DJ214233",
-                  "pickupTimeETA": "2021-05-13T13:59:00Z",
-                  "transportType": "bicycle",
-                  "courier": {
-                    "name": "Mac Miller",
-                    "phone": "+3292331234",
-                    "longitude": "51.05433703603857",
-                    "latitude": "3.738214852809371"
-                  },
-                  "locations": [
-                    {
-                      "orderId": "602987dd539d9697c836198b",
-                      "channelOrderDisplayId": "1234567890",
-                      "status": 40,
-                      "deliveryTimeETA": "2021-05-13T14:13:00Z"
-                    }
-                  ]
-                }]
+                "examples": [
+                  {
+                    "deliveryJobId": "602***66a",
+                    "externalJobId": "DJ214233",
+                    "pickupTimeETA": "2021-05-13T13:59:00Z",
+                    "transportType": "bicycle",
+                    "courier": {
+                      "name": "Mac Miller",
+                      "phone": "+3292331234",
+                      "longitude": "51.05433703603857",
+                      "latitude": "3.738214852809371"
+                    },
+                    "locations": [
+                      {
+                        "orderId": "602987dd539d9697c836198b",
+                        "channelOrderDisplayId": "1234567890",
+                        "status": 40,
+                        "deliveryTimeETA": "2021-05-13T14:13:00Z"
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -2891,7 +2953,7 @@
     "/fulfillment/cancel": {
       "post": {
         "tags": [
-          "Dispatch API > Deliverect Endpoints"
+          "Dispatch API"
         ],
         "summary": "Cancel Delivery",
         "requestBody": {
@@ -2915,7 +2977,7 @@
     "/integrator.com/validateJob": {
       "post": {
         "tags": [
-          "Dispatch API > Partner Webhooks"
+          "Dispatch API "
         ],
         "summary": "Validate delivery job",
         "description": "Gets called to validate if there are drivers available and to check if it's possible to deliver one or multiple orders ##### You can find some request parameters in the table below: | Parameter | Meaning | Type | | --- | --- | --- | | `jobId` | Deliverect delivery job id | string | | `pickupTime` | Expected pick up time | string | | `pickupLocation` | Order pick up location | object | | `deliveryLocations` | Array of delivery locations | array[object] | | `deliveryLocations.orderId` | Deliverect order id | string | | `deliveryLocations.channelOrderDisplayId` | Channel order id | string | | `deliveryLocations.deliveryTime` | Expected delivery time | string | | `deliveryLocations.packageSize` | Package size | string | | `deliveryLocations.payment.orderIsAlreadyPaid` | Indicates if order has been paid already | bool | | `deliveryLocations.payment.amount` | Payment amount | integer | | `deliveryLocations.payment.paymentType` | Payment type | integer | | `deliveryLocations.payment.paysWith` | Customer pays with specified amount of money. Can be used to calculate change. | integer | ##### You can find some response parameters in the table below: | Parameter | Meaning | Type | |-|-|-| | `jobId` | Deliverect delivery job id | string | | `canDeliver` | Indicates if delivery partner able complete delivery job | bool | | `pickupTimeETA` | Estimated pick up time | string | | `price` | This is the cost charged for delivery | object | | `price.price` | Delivery cost (`1000` stands for `10.00`) | integer | | `price.taxRate` | Tax rate for delivery(`10000` stands for `10.00%`) | integer | | `courierId` | This is the unique identifier of the rider | string | | `externalJobId` | Job id in delivery partner system | integer | | `deliveryLocations.deliveryId` | Id of the delivery generated by delivery partner | string | | `deliveryLocations.orderId` | Deliverect order id | string | | `deliveryLocations.deliveryTimeETA` | Estimated delivery up time | string | ##### Transport types: Following transport types supported by deliverect: | Transport type name | String value | |-|-| | `UNKNOWN` | unknown | | `BICYCLE` | bicycle | | `CARGOBIKE` | cargobike | | `MOTORBIKE` | motorbike | | `MOTORBIKE XL` | motorbikexl | | `CAR` | car | ##### Package sizes: Following package sizes supported by deliverect: | Package size name | String value | |-|-| | `UNKNOWN` | unknown | | `SMALL` | small | | `MEDIUM` | medium | | `LARGE` | large | | `EXTRA LARGE` | extraLarge | ##### Payment info: Together with delivery location info we send payment information which include if order has been paid already, amount of payment and payment type. Following payment types are supported by Deliverect at the moment: | Payment type name | Integer value | |-|-| | credit card online | 0 | | cash | 1 | ##### Error codes: If delivery is not possible one or more of following error codes expected to be returned in response: | Deliverect error tag | Description | Integer value | |-|-|-| | `UNKNOWN` | unknown error occurred | 0 | | `INTERNAL ERROR` | internal error occurred | 5 | | `PACKAGE SIZE TOO LARGE` | package is too big to be delivered | 10 | | `INVALID PACKAGE SIZE` | provided package size is invalid | 15 | | `NO DRIVERS AVAILABLE` | no drivers available | 20 | | `INVALID DELIVERY DATA` | provided data is not valid | 25 | | `OUTSIDE DELIVERY AREA` | pickup or drop off location is outside delivery zone | 30 | | `TOO MANY PACKAGES` | too many packages within a delivery job | 40 | | `DELIVERY ADDRESS NOT RECOGNIZED` | delivery address is not recognized | 50 | | `PICKUP ADDRESS NOT RECOGNIZED` | pickup address is not recognized | 60 | | `UNKNOWN DELIVERY JOB` | job with provided id not found of doesn't exist | 70 | | `CONTACT DATA INVALID` | invalid contact person data | 80 | | `INVALID COORDINATES` | provided coordinates is not valid | 90 | | `TIME NOT ALLOWED` | pickup or delivery time is not allowed | 100 | | `PAYMENT DECLINED` | payment declined | 110 | | `DUPLICATE JOB` | delivery job already exists | 120 | | `CANNOT TRAVEL TO DELIVERY` | drop off locations is not reachable | 130 | | `CANNOT CANCEL` | cancel is not possible | 140 | | `DATE FORMAT ERROR` | invalid date format | 150 |",
@@ -2924,47 +2986,49 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "jobId": "609***72e",
-                  "account": "5f1***131",
-                  "pickupTime": "2021-05-13T13:40:04Z",
-                  "transportType": "unknown",
-                  "pickupLocation": {
-                    "location": "606***555",
-                    "name": "Deliverect's Pizza Place",
-                    "remarks": "please use the backdoor for order pickup",
-                    "street": "van Ghentlaan",
-                    "streetNumber": "3",
-                    "postalCode": "9000 LK",
-                    "city": "Leusden",
-                    "latitude": "52.379189",
-                    "longitude": "4.899431"
-                  },
-                  "deliveryLocations": [
-                    {
-                      "orderId": "609***4dd",
-                      "channelOrderDisplayId": "MT4YVTPL",
-                      "deliveryTime": "2021-05-13T13:55:00Z",
-                      "packageSize": "unknown",
-                      "orderDescription": "hot food",
-                      "company": "BrainQuantums",
-                      "name": "V. Bertels",
-                      "street": "Refugehof",
-                      "streetNumber": "49",
-                      "postalCode": "9001 AB",
+                "examples": [
+                  {
+                    "jobId": "609***72e",
+                    "account": "5f1***131",
+                    "pickupTime": "2021-05-13T13:40:04Z",
+                    "transportType": "unknown",
+                    "pickupLocation": {
+                      "location": "606***555",
+                      "name": "Deliverect's Pizza Place",
+                      "remarks": "please use the backdoor for order pickup",
+                      "street": "van Ghentlaan",
+                      "streetNumber": "3",
+                      "postalCode": "9000 LK",
                       "city": "Leusden",
-                      "phone": "+32123456789",
-                      "deliveryRemarks": "Don't ring door bell.",
                       "latitude": "52.379189",
-                      "longitude": "4.899431",
-                      "payment": {
-                        "orderIsAlreadyPaid": true,
-                        "amount": 1100,
-                        "paymentType": 0
+                      "longitude": "4.899431"
+                    },
+                    "deliveryLocations": [
+                      {
+                        "orderId": "609***4dd",
+                        "channelOrderDisplayId": "MT4YVTPL",
+                        "deliveryTime": "2021-05-13T13:55:00Z",
+                        "packageSize": "unknown",
+                        "orderDescription": "hot food",
+                        "company": "BrainQuantums",
+                        "name": "V. Bertels",
+                        "street": "Refugehof",
+                        "streetNumber": "49",
+                        "postalCode": "9001 AB",
+                        "city": "Leusden",
+                        "phone": "+32123456789",
+                        "deliveryRemarks": "Don't ring door bell.",
+                        "latitude": "52.379189",
+                        "longitude": "4.899431",
+                        "payment": {
+                          "orderIsAlreadyPaid": true,
+                          "amount": 1100,
+                          "paymentType": 0
+                        }
                       }
-                    }
-                  ]
-                }]
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -3056,7 +3120,7 @@
     "/integrator.com/createJob": {
       "post": {
         "tags": [
-          "Dispatch API > Partner Webhooks"
+          "Dispatch API"
         ],
         "summary": "Create delivery job",
         "description": "Creates a delivery job for one or more orders",
@@ -3065,47 +3129,49 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "jobId": "609***72e",
-                  "account": "5f1***131",
-                  "pickupTime": "2021-05-13T13:40:04Z",
-                  "transportType": "unknown",
-                  "pickupLocation": {
-                    "location": "606***555",
-                    "name": "Deliverect's Pizza Place",
-                    "remarks": "please use the backdoor for order pickup",
-                    "street": "van Ghentlaan",
-                    "streetNumber": "3",
-                    "postalCode": "9000 LK",
-                    "city": "Leusden",
-                    "latitude": "52.379189",
-                    "longitude": "4.899431"
-                  },
-                  "deliveryLocations": [
-                    {
-                      "orderId": "609***4dd",
-                      "channelOrderDisplayId": "MT4YVTPL",
-                      "deliveryTime": "2021-05-13T13:55:00Z",
-                      "packageSize": "unknown",
-                      "orderDescription": "hot food",
-                      "company": "BrainQuantums",
-                      "name": "V. Bertels",
-                      "street": "Refugehof",
-                      "streetNumber": "49",
-                      "postalCode": "9001 AB",
+                "examples": [
+                  {
+                    "jobId": "609***72e",
+                    "account": "5f1***131",
+                    "pickupTime": "2021-05-13T13:40:04Z",
+                    "transportType": "unknown",
+                    "pickupLocation": {
+                      "location": "606***555",
+                      "name": "Deliverect's Pizza Place",
+                      "remarks": "please use the backdoor for order pickup",
+                      "street": "van Ghentlaan",
+                      "streetNumber": "3",
+                      "postalCode": "9000 LK",
                       "city": "Leusden",
-                      "phone": "+32123456789",
-                      "deliveryRemarks": "Don't ring door bell.",
                       "latitude": "52.379189",
-                      "longitude": "4.899431",
-                      "payment": {
-                        "orderIsAlreadyPaid": true,
-                        "amount": 1100,
-                        "paymentType": 0
+                      "longitude": "4.899431"
+                    },
+                    "deliveryLocations": [
+                      {
+                        "orderId": "609***4dd",
+                        "channelOrderDisplayId": "MT4YVTPL",
+                        "deliveryTime": "2021-05-13T13:55:00Z",
+                        "packageSize": "unknown",
+                        "orderDescription": "hot food",
+                        "company": "BrainQuantums",
+                        "name": "V. Bertels",
+                        "street": "Refugehof",
+                        "streetNumber": "49",
+                        "postalCode": "9001 AB",
+                        "city": "Leusden",
+                        "phone": "+32123456789",
+                        "deliveryRemarks": "Don't ring door bell.",
+                        "latitude": "52.379189",
+                        "longitude": "4.899431",
+                        "payment": {
+                          "orderIsAlreadyPaid": true,
+                          "amount": 1100,
+                          "paymentType": 0
+                        }
                       }
-                    }
-                  ]
-                }]
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -3166,7 +3232,7 @@
     "/cancelJob": {
       "post": {
         "tags": [
-          "Dispatch API > Partner Webhooks"
+          "Dispatch API"
         ],
         "summary": "Cancel delivery job",
         "description": "Cancel a delivery job after it was created at the partner. This can happen if all the orders on the job cannot be fulfilled or if the customer no longer wants the delivery.",
@@ -3175,23 +3241,25 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "examples": [{
-                  "jobId": "5c8fbfd3c6489f00010e50d1",
-                  "account": "5be9fe94c6489f0001b2fe57",
-                  "pickupLocation": {
-                    "location": "5ea823bc8b4c780001a674a9"
-                  },
-                  "deliveryLocations": [
-                    {
-                      "orderId": "5f47a223280a29046404e2af",
-                      "channelOrderDisplayId": "MT4YVTPL",
-                      "deliveryId": "ABC567"
+                "examples": [
+                  {
+                    "jobId": "5c8fbfd3c6489f00010e50d1",
+                    "account": "5be9fe94c6489f0001b2fe57",
+                    "pickupLocation": {
+                      "location": "5ea823bc8b4c780001a674a9"
+                    },
+                    "deliveryLocations": [
+                      {
+                        "orderId": "5f47a223280a29046404e2af",
+                        "channelOrderDisplayId": "MT4YVTPL",
+                        "deliveryId": "ABC567"
+                      }
+                    ],
+                    "courier": {
+                      "courierId": "D1234"
                     }
-                  ],
-                  "courier": {
-                    "courierId": "D1234"
                   }
-                }]
+                ]
               }
             }
           }
@@ -3225,10 +3293,10 @@
         }
       }
     },
-    "/products": {
+    "/products/": {
       "get": {
         "tags": [
-          "Store API > Deliverect Endpoints"
+          "Store API"
         ],
         "summary": "Get Products for Account",
         "parameters": [
@@ -4445,530 +4513,540 @@
           }
         }
       }
-    }
-  },
-  "/channelDisabledProducts": {
-    "get": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Get products marked out of stock",
-      "description": "Get products marked out of stock.",
-      "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "schema": {
-            "type": "string"
+    },
+    "/channelDisabledProducts": {
+      "get": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Get products marked out of stock",
+        "description": "Get products marked out of stock.",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
           },
-          "examples": "application/json"
-        },
-        {
-          "name": "where",
-          "in": "query",
-          "schema": {
-            "type": "string"
-          },
-          "examples": {
-            "account": "account_id",
-            "location": "location_id"
+          {
+            "name": "where",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": {
+              "account": "account_id",
+              "location": "location_id"
+            }
           }
-        }
-      ],
-      "responses": {
-        "default": {
-          "description": "default",
-          "headers": {
-            "Content-Type": {
-              "schema": {
-                "type": "string",
-                "examples": "application/json"
+        ],
+        "responses": {
+          "default": {
+            "description": "default",
+            "headers": {
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "examples": [
+                    "application/json"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "_items": [
+                    {
+                      "_id": "612***2cf",
+                      "_created": "2021-08-30T11:41:09.077000Z",
+                      "_updated": "2021-08-30T11:53:09.000000Z",
+                      "_etag": "19358d3fb0b1cdb2cf96fa71f7c21abda863b00f",
+                      "account": "60e***945",
+                      "channel": -1,
+                      "location": "60e***96a",
+                      "plu": "VAR-PROD-1",
+                      "name": "Pinapple pizza",
+                      "deliverectProductId": "610***b73",
+                      "snoozeStart": "2021-08-30T11:41:09Z",
+                      "snoozeEnd": "2021-08-30T11:53:09Z",
+                      "isBogof": false,
+                      "isInBundle": false,
+                      "channelLinks": [
+                        "60e***a37"
+                      ],
+                      "_links": {
+                        "self": {
+                          "title": "channelDisabledProducts",
+                          "href": "channelDisabledProducts/612***2cf"
+                        }
+                      }
+                    },
+                    {
+                      "_id": "612***298",
+                      "_created": "2021-08-30T14:31:19Z",
+                      "_updated": "2021-08-30T14:31:19Z",
+                      "_etag": "f839b4936adbaa034358bc669abe75cfdbb80964",
+                      "account": "60e***945",
+                      "channel": -1,
+                      "location": "60e***96a",
+                      "plu": "MOD555",
+                      "name": "Ice",
+                      "deliverectProductId": "612***e8d",
+                      "snoozeStart": "2021-08-30T14:31:19Z",
+                      "snoozeEnd": "2021-08-30T15:31:19Z",
+                      "isBogof": false,
+                      "isInBundle": false,
+                      "channelLinks": [
+                        "60e***a37",
+                        "612***204"
+                      ],
+                      "_links": {
+                        "self": {
+                          "title": "channelDisabledProducts",
+                          "href": "channelDisabledProducts/612***298"
+                        }
+                      }
+                    },
+                    {
+                      "_id": "613***6a3",
+                      "_created": "2021-09-03T13:09:48Z",
+                      "_updated": "2021-09-03T13:09:48Z",
+                      "_etag": "6f5e942de36140f6825c7f69695f94a464bcab4e",
+                      "account": "60e***945",
+                      "channel": -1,
+                      "location": "60e***96a",
+                      "plu": "PR2",
+                      "name": "Cola",
+                      "deliverectProductId": "60e4***f62",
+                      "snoozeStart": "2021-08-18T11:13:00Z",
+                      "snoozeEnd": "2021-09-03T13:17:48Z",
+                      "isBogof": false,
+                      "isInBundle": false,
+                      "channelLinks": [
+                        "60e***a37",
+                        "612***204",
+                        "613***31c"
+                      ],
+                      "_links": {
+                        "self": {
+                          "title": "channelDisabledProducts",
+                          "href": "channelDisabledProducts/613***6a3"
+                        }
+                      }
+                    }
+                  ],
+                  "_links": {
+                    "parent": {
+                      "title": "home",
+                      "href": "/"
+                    },
+                    "self": {
+                      "title": "channelDisabledProducts",
+                      "href": "channelDisabledProducts?where={ account: {{account_id}}, location: {{location_id}}"
+                    }
+                  },
+                  "_meta": {
+                    "page": 1,
+                    "max_results": 25,
+                    "total": 9
+                  }
+                }
               }
             }
-          },
+          }
+        }
+      }
+    },
+    "/products/snoozeByTags": {
+      "post": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Mark products out of stock by tag",
+        "description": "Mark products out of stock for a certain amount of time based on their tag and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
-              },
-              "examples": {
-                "_items": [
+                "type": "object",
+                "examples": [
                   {
-                    "_id": "612***2cf",
-                    "_created": "2021-08-30T11:41:09.077000Z",
-                    "_updated": "2021-08-30T11:53:09.000000Z",
-                    "_etag": "19358d3fb0b1cdb2cf96fa71f7c21abda863b00f",
-                    "account": "60e***945",
-                    "channel": -1,
-                    "location": "60e***96a",
-                    "plu": "VAR-PROD-1",
-                    "name": "Pinapple pizza",
-                    "deliverectProductId": "610***b73",
-                    "snoozeStart": "2021-08-30T11:41:09Z",
-                    "snoozeEnd": "2021-08-30T11:53:09Z",
-                    "isBogof": false,
-                    "isInBundle": false,
-                    "channelLinks": [
-                      "60e***a37"
+                    "account": "{{account_id}}",
+                    "location": "{{location_id}}",
+                    "tags": [
+                      1
                     ],
-                    "_links": {
-                      "self": {
-                        "title": "channelDisabledProducts",
-                        "href": "channelDisabledProducts/612***2cf"
-                      }
-                    }
-                  },
-                  {
-                    "_id": "612***298",
-                    "_created": "2021-08-30T14:31:19Z",
-                    "_updated": "2021-08-30T14:31:19Z",
-                    "_etag": "f839b4936adbaa034358bc669abe75cfdbb80964",
-                    "account": "60e***945",
-                    "channel": -1,
-                    "location": "60e***96a",
-                    "plu": "MOD555",
-                    "name": "Ice",
-                    "deliverectProductId": "612***e8d",
-                    "snoozeStart": "2021-08-30T14:31:19Z",
-                    "snoozeEnd": "2021-08-30T15:31:19Z",
-                    "isBogof": false,
-                    "isInBundle": false,
-                    "channelLinks": [
-                      "60e***a37",
-                      "612***204"
-                    ],
-                    "_links": {
-                      "self": {
-                        "title": "channelDisabledProducts",
-                        "href": "channelDisabledProducts/612***298"
-                      }
-                    }
-                  },
-                  {
-                    "_id": "613***6a3",
-                    "_created": "2021-09-03T13:09:48Z",
-                    "_updated": "2021-09-03T13:09:48Z",
-                    "_etag": "6f5e942de36140f6825c7f69695f94a464bcab4e",
-                    "account": "60e***945",
-                    "channel": -1,
-                    "location": "60e***96a",
-                    "plu": "PR2",
-                    "name": "Cola",
-                    "deliverectProductId": "60e4***f62",
-                    "snoozeStart": "2021-08-18T11:13:00Z",
-                    "snoozeEnd": "2021-09-03T13:17:48Z",
-                    "isBogof": false,
-                    "isInBundle": false,
-                    "channelLinks": [
-                      "60e***a37",
-                      "612***204",
-                      "613***31c"
-                    ],
-                    "_links": {
-                      "self": {
-                        "title": "channelDisabledProducts",
-                        "href": "channelDisabledProducts/613***6a3"
-                      }
-                    }
+                    "snoozeStart": "2019-03-06T15:45:00.000Z",
+                    "snoozeEnd": "2019-03-07T15:45:00.000Z"
                   }
-                ],
-                "_links": {
-                  "parent": {
-                    "title": "home",
-                    "href": "/"
-                  },
-                  "self": {
-                    "title": "channelDisabledProducts",
-                    "href": "channelDisabledProducts?where={ account: {{account_id}}, location: {{location_id}}"
-                  }
-                },
-                "_meta": {
-                  "page": 1,
-                  "max_results": 25,
-                  "total": 9
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/products/snoozeByTags": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Mark products out of stock by tag",
-      "description": "Mark products out of stock for a certain amount of time based on their tag and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "account": "{{account_id}}",
-                "location": "{{location_id}}",
-                "tags": [
-                  1
-                ],
-                "snoozeStart": "2019-03-06T15:45:00.000Z",
-                "snoozeEnd": "2019-03-07T15:45:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "responses": {
-        "default": {
-          "description": "default",
-          "content": {
-            "text/plain": {
-              "schema": {
-                "type": "string"
-              },
-              "examples": {
-                "example-0": {
-                  "summary": "Single tag for all locations",
-                  "value": null
-                },
-                "example-1": {
-                  "summary": "Single tag for one location",
-                  "value": null
-                },
-                "example-2": {
-                  "summary": "Multiple tags for all locations",
-                  "value": null
-                },
-                "example-3": {
-                  "summary": "Multiple tag for one location",
-                  "value": null
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/products/snoozeByPlus": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Mark products out of stock by PLU",
-      "description": "Mark products out of stock for a certain amount of time based on their PLU and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past.",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "account": "{{account_id}}",
-                "location": "{{location_id}}",
-                "plus": [
-                  "PLU1"
-                ],
-                "snoozeStart": "2019-03-06T15:45:00.000Z",
-                "snoozeEnd": "2019-03-07T15:45:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "responses": {
-        "default": {
-          "description": "default",
-          "content": {
-            "text/plain": {
-              "schema": {
-                "type": "string"
-              },
-              "examples": {
-                "example-0": {
-                  "summary": "Multiple PLUs across all locations",
-                  "value": null
-                },
-                "example-1": {
-                  "summary": "Multiple PLUs for one location",
-                  "value": null
-                },
-                "example-2": {
-                  "summary": "Single PLU for one location",
-                  "value": null
-                },
-                "example-3": {
-                  "summary": "Single PLU across all locations",
-                  "value": null
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/updateStoreStatus/{locationId}": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Update Store Status",
-      "description": "This endpoint allows a POS to update store status. One, several or all channel links can be put in busy/online mode(should be supported by channels as well) by calling this endpoint. When sending a call to the endpoint make sure it includes `isActive` flag which indicates if store busy/online. Optional parameter `channelLinks` allwos you to specify a list of channel links to be put in busy/online mode. Otherwise all location channel links will be put in busy/online mode. As a payload we always expect a JSON that contains: * Flag that indicates if store is busy/online (`isActive`) * [Optional] Array of channel link ids to be put in busy/online more (`channelLink`)",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "isActive": true,
-                "channelLinks": [
-                  "606d8489f****ddf13b****6"
                 ]
               }
             }
           }
-        }
-      },
-      "parameters": [
-        {
-          "name": "locationId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "text/plain": {
-              "schema": {
-                "type": "string"
-              },
-              "examples": null
-            }
-          }
         },
-        "400": {
-          "description": "Bad Request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              },
-              "examples": {
-                "errors": [
-                  "Channel Link 606d8489f****ddf13b****6 failed to update status"
-                ]
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/location/{locationId}/openingHours": {
-    "get": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Get Store Opening Hours",
-      "parameters": [
-        {
-          "name": "locationId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Successful response",
-          "content": {
-            "application/json": {}
-          }
-        }
-      }
-    }
-  },
-  "/account/{accountId}/openingHours": {
-    "get": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Get Account Opening Hours",
-      "parameters": [
-        {
-          "name": "accountId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Successful response",
-          "content": {
-            "application/json": {}
-          }
-        }
-      }
-    }
-  },
-  "/locations/openingHours": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Create/Update Opening Hours",
-      "requestBody": {
-        "content": {}
-      },
-      "responses": {
-        "default": {
-          "description": "default",
-          "content": {
-            "text/plain": {
-              "schema": {
-                "type": "string"
-              },
-              "examples": {
-                "example-0": {
-                  "summary": "Channel Specific Hours",
-                  "value": null
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 },
-                "example-1": {
-                  "summary": "Location Specific Hours",
-                  "value": null
-                },
-                "example-2": {
-                  "summary": "Location and Channel Hours",
-                  "value": null
+                "examples": {
+                  "example-0": {
+                    "summary": "Single tag for all locations",
+                    "value": null
+                  },
+                  "example-1": {
+                    "summary": "Single tag for one location",
+                    "value": null
+                  },
+                  "example-2": {
+                    "summary": "Multiple tags for all locations",
+                    "value": null
+                  },
+                  "example-3": {
+                    "summary": "Multiple tag for one location",
+                    "value": null
+                  }
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "/locations/holidays": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Holiday Hours for Locations",
-      "requestBody": {
-        "content": {}
-      },
-      "responses": {
-        "default": {
-          "description": "default",
+    },
+    "/products/snoozeByPlus": {
+      "post": {
+        "tags": [
+          "Store API > Deliverect Endpoints"
+        ],
+        "summary": "Mark products out of stock by PLU",
+        "description": "Mark products out of stock for a certain amount of time based on their PLU and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past.",
+        "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "examples": null
+                "type": "object",
+                "examples": [
+                  {
+                    "account": "{{account_id}}",
+                    "location": "{{location_id}}",
+                    "plus": [
+                      "PLU1"
+                    ],
+                    "snoozeStart": "2019-03-06T15:45:00.000Z",
+                    "snoozeEnd": "2019-03-07T15:45:00.000Z"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "example-0": {
+                    "summary": "Multiple PLUs across all locations",
+                    "value": null
+                  },
+                  "example-1": {
+                    "summary": "Multiple PLUs for one location",
+                    "value": null
+                  },
+                  "example-2": {
+                    "summary": "Single PLU for one location",
+                    "value": null
+                  },
+                  "example-3": {
+                    "summary": "Single PLU across all locations",
+                    "value": null
+                  }
+                }
+              }
             }
           }
         }
       }
-    }
-  },
-  "/location/{locationId}/holidays": {
-    "get": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Holiday Hours for Locations",
-      "parameters": [
-        {
-          "name": "locationId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Successful response",
+    },
+    "/updateStoreStatus/{locationId}": {
+      "post": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Update Store Status",
+        "description": "This endpoint allows a POS to update store status. One, several or all channel links can be put in busy/online mode(should be supported by channels as well) by calling this endpoint. When sending a call to the endpoint make sure it includes `isActive` flag which indicates if store busy/online. Optional parameter `channelLinks` allwos you to specify a list of channel links to be put in busy/online mode. Otherwise all location channel links will be put in busy/online mode. As a payload we always expect a JSON that contains: * Flag that indicates if store is busy/online (`isActive`) * [Optional] Array of channel link ids to be put in busy/online more (`channelLink`)",
+        "requestBody": {
           "content": {
-            "application/json": {}
-          }
-        }
-      }
-    }
-  },
-  "/locations/channels/{locationId}/holidays": {
-    "get": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Holiday Hours for Locations & ChannelLinks",
-      "parameters": [
-        {
-          "name": "locationId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Successful response",
-          "content": {
-            "application/json": {}
-          }
-        }
-      }
-    }
-  },
-  "/locations/channels/holidays": {
-    "post": {
-      "tags": [
-        "Store API > Deliverect Endpoints"
-      ],
-      "summary": "Holiday Hours for Locations and ChannelLinks",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "locations": [
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "examples": [
                   {
-                    "id": "someLocationId",
-                    "channels": [
+                    "isActive": true,
+                    "channelLinks": [
+                      "606d8489f****ddf13b****6"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locationId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": null
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "errors": [
+                    "Channel Link 606d8489f****ddf13b****6 failed to update status"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/location/{locationId}/openingHours": {
+      "get": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Get Store Opening Hours",
+        "parameters": [
+          {
+            "name": "locationId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/openingHours": {
+      "get": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Get Account Opening Hours",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/locations/openingHours": {
+      "post": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Create/Update Opening Hours",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "example-0": {
+                    "summary": "Channel Specific Hours",
+                    "value": null
+                  },
+                  "example-1": {
+                    "summary": "Location Specific Hours",
+                    "value": null
+                  },
+                  "example-2": {
+                    "summary": "Location and Channel Hours",
+                    "value": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/holidays": {
+      "post": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Holiday Hours for Locations",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/location/{locationId}/holidays": {
+      "get": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Holiday Hours for Locations",
+        "parameters": [
+          {
+            "name": "locationId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/locations/channels/{locationId}/holidays": {
+      "get": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Holiday Hours for Locations & ChannelLinks",
+        "parameters": [
+          {
+            "name": "locationId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/locations/channels/holidays": {
+      "post": {
+        "tags": [
+          "Store API"
+        ],
+        "summary": "Holiday Hours for Locations and ChannelLinks",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "examples": [
+                  {
+                    "locations": [
                       {
-                        "id": "someChannelLinkId",
-                        "holidays": [
+                        "id": "someLocationId",
+                        "channels": [
                           {
-                            "startTime": "2021-12-19T15:53:00Z",
-                            "endTime": "2021-12-19T16:10:00Z"
-                          },
-                          {
-                            "startTime": "2022-05-18T04:00:00Z",
-                            "endTime": "2022-05-18T05:00:00Z"
-                          },
-                          {
-                            "startTime": "2022-05-17T17:37:00Z",
-                            "endTime": "2022-05-17T17:39:00Z"
-                          },
-                          {
-                            "startTime": "2023-08-04T09:00:00Z",
-                            "endTime": "2023-08-04T19:00:00Z"
+                            "id": "someChannelLinkId",
+                            "holidays": [
+                              {
+                                "startTime": "2021-12-19T15:53:00Z",
+                                "endTime": "2021-12-19T16:10:00Z"
+                              },
+                              {
+                                "startTime": "2022-05-18T04:00:00Z",
+                                "endTime": "2022-05-18T05:00:00Z"
+                              },
+                              {
+                                "startTime": "2022-05-17T17:37:00Z",
+                                "endTime": "2022-05-17T17:39:00Z"
+                              },
+                              {
+                                "startTime": "2023-08-04T09:00:00Z",
+                                "endTime": "2023-08-04T19:00:00Z"
+                              }
+                            ]
                           }
                         ]
                       }
@@ -4978,112 +5056,116 @@
               }
             }
           }
-        }
-      },
-      "responses": {
-        "default": {
-          "description": "default",
-          "content": {
-            "text/plain": {
-              "schema": {
-                "type": "string"
-              },
-              "examples": null
-            }
-          }
-        }
-      }
-    }
-  },
-  "/kds/orderStatus/{orderId}": {
-    "post": {
-      "tags": [
-        "KDS API > Deliverect Endpoint"
-      ],
-      "summary": "Update Order Status",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "orderId": "6239****835f",
-                "status": 50,
-                "reason": "Order is being prepared."
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": null
               }
             }
           }
         }
-      },
-      "parameters": [
-        {
-          "name": "orderId",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Successful response",
-          "content": {
-            "application/json": {}
-          }
-        }
       }
-    }
-  },
-  "/snoozeByTags": {
-    "post": {
-      "tags": [
-        "KDS API > Deliverect Endpoint"
-      ],
-      "summary": "Mark products out of stock by tag",
-      "description": "Mark products out of stock for a certain amount of time based on their tag and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
-      "requestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "examples": {
-                "account": "{{account_id}}",
-                "location": "{{location_id}}",
-                "tags": [
-                  1
-                ],
-                "snoozeStart": "2019-03-06T15:45:00.000Z",
-                "snoozeEnd": "2019-03-07T15:45:00.000Z"
+    },
+    "/kds/orderStatus/{orderId}": {
+      "post": {
+        "tags": [
+          "KDS API"
+        ],
+        "summary": "Update Order Status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "examples": [
+                  {
+                    "orderId": "6239****835f",
+                    "status": 50,
+                    "reason": "Order is being prepared."
+                  }
+                ]
               }
             }
           }
+        },
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
         }
-      },
-      "responses": {
-        "default": {
-          "description": "default",
+      }
+    },
+    "/snoozeByTags": {
+      "post": {
+        "tags": [
+          "KDS API"
+        ],
+        "summary": "Mark products out of stock by tag",
+        "description": "Mark products out of stock for a certain amount of time based on their tag and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
+        "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "examples": {
-                "example-0": {
-                  "summary": "Single tag for all locations",
-                  "value": null
+                "type": "object",
+                "examples": [
+                  {
+                    "account": "{{account_id}}",
+                    "location": "{{location_id}}",
+                    "tags": [
+                      1
+                    ],
+                    "snoozeStart": "2019-03-06T15:45:00.000Z",
+                    "snoozeEnd": "2019-03-07T15:45:00.000Z"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 },
-                "example-1": {
-                  "summary": "Single tag for one location",
-                  "value": null
-                },
-                "example-2": {
-                  "summary": "Multiple tags for all locations",
-                  "value": null
-                },
-                "example-3": {
-                  "summary": "Multiple tag for one location",
-                  "value": null
+                "examples": {
+                  "example-0": {
+                    "summary": "Single tag for all locations",
+                    "value": null
+                  },
+                  "example-1": {
+                    "summary": "Single tag for one location",
+                    "value": null
+                  },
+                  "example-2": {
+                    "summary": "Multiple tags for all locations",
+                    "value": null
+                  },
+                  "example-3": {
+                    "summary": "Multiple tag for one location",
+                    "value": null
+                  }
                 }
               }
             }
