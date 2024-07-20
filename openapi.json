@@ -70,7 +70,7 @@
                     "client_id": "{{clientId}}",
                     "client_secret": "{{clientSecret}}",
                     "audience": "https://api.deliverect.com",
-                    "grant_type": "{{client_credentials}}"
+                    "grant_type": "token"
                   }
                 ]
               }
@@ -1045,6 +1045,16 @@
         ],
         "summary": "Allergens and tags",
         "description": "This allows a channel to get allergens and tags existing in Deliverect.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{authToken}"
+          }
+          ],
         "responses": {
           "200": {
             "description": "200",
