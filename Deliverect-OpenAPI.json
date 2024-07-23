@@ -34,23 +34,39 @@
     },
     {
       "name": "POS API",
-      "description": ""
+      "description": "Deliverect Endpoint"
+    },
+    {
+      "name": "POS API (Webhooks)",
+      "description": "Partner Webhooks"
     },
     {
       "name": "Channel API",
-      "description": ""
+      "description": "Deliverect Endpoint"
     },
-    
+    {
+      "name": "Channel API (Webhooks)",
+      "description": "Partner Webhooks"
+    },
     {
       "name": "Dispatch API",
-      "description": ""
-    },
-    
-    {
-      "name": "Store API"
+      "description": "Deliverect Endpoint"
     },
     {
-      "name": "KDS API"
+      "name": "Dispatch API (Webhooks)",
+      "description": "Partner Webhooks"
+    },
+    {
+      "name": "Store API",
+      "description": "Deliverect Endpoint"
+    },
+    {
+      "name": "KDS API",
+      "description": "Deliverect Endpoint"
+    },
+    {
+      "name": "KDS API (Webhooks)",
+      "description": "Partner Webhooks"
     }
   ],
   "paths": {
@@ -1041,7 +1057,7 @@
     "/allAllergens": {
       "get": {
         "tags": [
-          "KDS API"
+          "POS API"
         ],
         "summary": "Allergens and tags",
         "description": "This allows a channel to get allergens and tags existing in Deliverect.",
@@ -2166,7 +2182,7 @@
     "/register": {
       "post": {
         "tags": [
-          "POS API"
+          "POS API (Webhooks)"
         ],
         "summary": "Register POS",
         "description": "Gets called when POS is being registered in Deliverect. For instance when a new customer adds a location you will receive the register event. After this event it should be possible to sync products and insert orders into the POS. Webhook payload contains information such as: * Deliverect account id (`accountId`) * Deliverect location id (`locationId`) * External location id provided by the POS (`externalLocationId`) We always expect a JSON result which contains the endpoints to: * Sync products from the POS to Deliverect (`syncProductsURL`) * Insert order from Deliverect to the POS (`ordersWebhookURL`) * Sync tables from the POS to Deliverect (`syncTablesURL`) * Sync floors from the POS to Deliverect (`syncFloorsURL`) If an endpoint is empty or not included in this response we will not use it.",
@@ -2206,7 +2222,7 @@
     "/products": {
       "get": {
       "tags": [
-        "POS API"
+        "POS API (Webhooks)"
       ],
       "summary": "Get products",
       "description": "Gets called when the user initiates a product sync from Deliverect. Depending on your setup there are two options. If you choose for an a-sync product sync this endpoint should return an empty HTTP 200 response. You can then a-sync send us the products to the given endpoint. If you choose for a sync way of working. You can directly choose to send us the products in exact the same format as you would in an a-sync way. For the format of sending us products please have a look here [product sync](https://developers.deliverect.com/#c102c78d-46bb-42e7-8c53-166978f71aa4)",
@@ -2228,7 +2244,7 @@
     "/getTables/": {
       "get": {
         "tags": [
-          "POS API"
+          "POS API (Webhooks)"
         ],
         "summary": "Sync Tables",
         "description": "Endpoint to get tables from the POS.",
@@ -2287,7 +2303,7 @@
     "/getFloors/": {
       "get": {
         "tags": [
-          "POS API"
+          "POS API (Webhooks)"
         ],
         "summary": "Sync Floors",
         "description": "Endpoint to get floors from the POS.",
@@ -3509,7 +3525,7 @@
     "/integrator.com/validateJob": {
       "post": {
         "tags": [
-          "Dispatch API"
+          "Dispatch API (Webhooks)"
         ],
         "summary": "Validate delivery job",
         "description": "Gets called to validate if there are drivers available and to check if it's possible to deliver one or multiple orders.",
@@ -3652,7 +3668,7 @@
     "/integrator.com/createJob": {
       "post": {
         "tags": [
-          "Dispatch API"
+          "Dispatch API (Webhooks)"
         ],
         "summary": "Create delivery job",
         "description": "Creates a delivery job for one or more orders",
@@ -3764,7 +3780,7 @@
     "/integrator/cancelJob": {
       "post": {
         "tags": [
-          "Dispatch API"
+          "Dispatch API (Webhooks)"
         ],
         "summary": "Cancel delivery job",
         "description": "Cancel a delivery job after it was created at the partner. This can happen if all the orders on the job cannot be fulfilled or if the customer no longer wants the delivery.",
@@ -5646,10 +5662,63 @@
         }
       }
     },
+    "/allAllergens/": {
+      "get": {
+        "tags": [
+          "KDS API (Webhooks)"
+        ],
+        "summary": "Allergens and tags",
+        "description": "This allows a channel to get allergens and tags existing in Deliverect.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{authToken}"
+          }
+          ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": [
+                  {
+                    "name": "Alcohol",
+                    "allergenId": 1
+                  },
+                  {
+                    "name": "Halal",
+                    "allergenId": 2
+                  },
+                  {
+                    "name": "Kosher",
+                    "allergenId": 3
+                  },
+                  {
+                    "name": "Vegan",
+                    "allergenId": 4
+                  },
+                  {
+                    "name": "Vegetarian",
+                    "allergenId": 5
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/snoozeByTags": {
       "post": {
         "tags": [
-          "KDS API"
+          "KDS API (Webhooks)"
         ],
         "summary": "Mark products out of stock by tag",
         "description": "Mark products out of stock for a certain amount of time based on their tag and location. You can use the same call to unsnooze product passing `snoozeEnd` time in the past. ##### NOTE Please note, that here and later all dates and times, coming from/to Deliverect are UTC.",
