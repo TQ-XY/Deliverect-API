@@ -19,13 +19,23 @@ tags:
   - name: Authentication
     description: ' '
   - name: POS API
-    description: ''
+    description: Deliverect Endpoint
+  - name: POS API (Webhooks)
+    description: Partner Webhooks
   - name: Channel API
-    description: ''
+    description: Deliverect Endpoint
+  - name: Channel API (Webhooks)
+    description: Partner Webhooks
   - name: Dispatch API
-    description: ''
+    description: Deliverect Endpoint
+  - name: Dispatch API (Webhooks)
+    description: Partner Webhooks
   - name: Store API
+    description: Deliverect Endpoint
   - name: KDS API
+    description: Deliverect Endpoint
+  - name: KDS API (Webhooks)
+    description: Partner Webhooks
 paths:
   /oauth/token:
     post:
@@ -41,7 +51,7 @@ paths:
                 - client_id: '{{clientId}}'
                   client_secret: '{{clientSecret}}'
                   audience: https://api.deliverect.com
-                  grant_type: '{{client_credentials}}'
+                  grant_type: token
       parameters:
         - name: content-type
           in: header
@@ -736,9 +746,15 @@ paths:
   /allAllergens:
     get:
       tags:
-        - KDS API
+        - POS API
       summary: Allergens and tags
       description: This allows a channel to get allergens and tags existing in Deliverect.
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: '{authToken}'
       responses:
         '200':
           description: '200'
@@ -1460,7 +1476,7 @@ paths:
   /register:
     post:
       tags:
-        - POS API
+        - POS API (Webhooks)
       summary: Register POS
       description: >-
         Gets called when POS is being registered in Deliverect. For instance
@@ -1499,7 +1515,7 @@ paths:
   /products:
     get:
       tags:
-        - POS API
+        - POS API (Webhooks)
       summary: Get products
       description: >-
         Gets called when the user initiates a product sync from Deliverect.
@@ -1522,7 +1538,7 @@ paths:
   /getTables/:
     get:
       tags:
-        - POS API
+        - POS API (Webhooks)
       summary: Sync Tables
       description: Endpoint to get tables from the POS.
       responses:
@@ -1559,7 +1575,7 @@ paths:
   /getFloors/:
     get:
       tags:
-        - POS API
+        - POS API (Webhooks)
       summary: Sync Floors
       description: Endpoint to get floors from the POS.
       responses:
@@ -2327,7 +2343,7 @@ paths:
   /integrator.com/validateJob:
     post:
       tags:
-        - Dispatch API
+        - Dispatch API (Webhooks)
       summary: Validate delivery job
       description: >-
         Gets called to validate if there are drivers available and to check if
@@ -2429,7 +2445,7 @@ paths:
   /integrator.com/createJob:
     post:
       tags:
-        - Dispatch API
+        - Dispatch API (Webhooks)
       summary: Create delivery job
       description: Creates a delivery job for one or more orders
       requestBody:
@@ -2511,7 +2527,7 @@ paths:
   /integrator/cancelJob:
     post:
       tags:
-        - Dispatch API
+        - Dispatch API (Webhooks)
       summary: Cancel delivery job
       description: >-
         Cancel a delivery job after it was created at the partner. This can
@@ -3954,10 +3970,40 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /allAllergens/:
+    get:
+      tags:
+        - KDS API (Webhooks)
+      summary: Allergens and tags
+      description: This allows a channel to get allergens and tags existing in Deliverect.
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: '{authToken}'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - name: Alcohol
+                  allergenId: 1
+                - name: Halal
+                  allergenId: 2
+                - name: Kosher
+                  allergenId: 3
+                - name: Vegan
+                  allergenId: 4
+                - name: Vegetarian
+                  allergenId: 5
   /snoozeByTags:
     post:
       tags:
-        - KDS API
+        - KDS API (Webhooks)
       summary: Mark products out of stock by tag
       description: >-
         Mark products out of stock for a certain amount of time based on their
